@@ -15,12 +15,8 @@ public:
     Interpreter();
     ~Interpreter();
     void compile(const char* filename);
+    void issueError(std::string err);
+    void issueWarning(std::string err);
 };
 
-Interpreter::Interpreter()
-{
-}
 
-Interpreter::~Interpreter()
-{
-}
