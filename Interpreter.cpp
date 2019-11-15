@@ -1,6 +1,14 @@
 #include "Interpreter.h"
 #include <sstream>
 #include "utility.h"
+
+Interpreter::Interpreter()
+{
+}
+
+Interpreter::~Interpreter()
+{
+}
 void Interpreter::compile(const char *filename)
 {
     std::ifstream in;
@@ -50,7 +58,7 @@ int Interpreter::nextInt()
 {
     if (lexQueue.empty())
     {
-        // Todo: issure error
+        issueError("Expecting a value");
     }
     int result;
     result = stringToInt(lexQueue.front());
@@ -58,57 +66,94 @@ int Interpreter::nextInt()
     return result;
 }
 
-std::string Interpreter::nextSymbol(){
+std::string Interpreter::nextSymbol()
+{
     if (lexQueue.empty())
     {
-        // Todo: issure error
+        issueError("Expecting a symbol");
     }
-    std::string result =lexQueue.front();
+    std::string result = lexQueue.front();
     lexQueue.pop();
     return result;
 }
 
-void Interpreter::processSymbol(const std::string& symbol){
-    if(symbol == "TURN"){
-
-    }
-    if(symbol == "MOVE"){
+void Interpreter::processSymbol(const std::string &symbol)
+{
+    if (symbol == "TURN")
+    {
         auto sym = nextSymbol();
-        if(isInt(sym)){
+        if (isInt(sym))
+        {
+            int value = stringToInt(sym);
+            executor.turn(value);
+        }
+        else
+        {
+            Variable &v = Variable::getVariableByName(sym);
+            if (v == Variable::noVar())
+            {
+                issueError("Variable not found: " + sym);
+            }
+            executor.turn(v);
+        }
+    }
+    if (symbol == "MOVE")
+    {
+        auto sym = nextSymbol();
+        if (isInt(sym))
+        {
             int value = stringToInt(sym);
             executor.move(value);
-        }else
+        }
+        else
         {
-            Variable& v = Variable::getVariableByName(sym);
-            if(v == Variable::noVar()){
-                // Todo: issue error
+            Variable &v = Variable::getVariableByName(sym);
+            if (v == Variable::noVar())
+            {
+                issueError("Variable not found: " + sym);
             }
             executor.move(v);
         }
-        
     }
-    if(symbol == "DEF"){
+    if (symbol == "DEF")
+    {
         std::string name = nextSymbol();
         int value = nextInt();
-        executor.def(name,value );
+        executor.def(name, value);
     }
-    if(symbol == "ADD"){
+    if (symbol == "ADD")
+    {
         std::string name = nextSymbol();
         int value = nextInt();
-        executor.add(name,value );
+        executor.add(name, value);
     }
-    if(symbol == "COLOR"){
-
+    if (symbol == "COLOR")
+    {
+        int r, g, b;
+        r = nextInt();
+        g = nextInt();
+        b = nextInt();
+        executor.setPenColor(r, g, b);
     }
-    if(symbol == "CLOAK"){
-        executor.cloak(v);
+    if (symbol == "CLOAK")
+    {
+        executor.cloak();
     }
 
-    if(symbol == "LOOP"){
-
+    if (symbol == "LOOP")
+    {
+        int loop = nextInt();
+    }
+    if (symbol == "FUNC")
+    {
+    }
+    if (symbol == "END")
+    {
+        auto sym = nextSymbol();
     }
 
-    if(symbol == "END"){
-
+    if (symbol == "CALL")
+    {
+        auto funcName = nextSymbol();
     }
 }
