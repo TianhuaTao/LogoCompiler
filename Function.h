@@ -1,13 +1,18 @@
+#include "utility.h"
 class Function
 {
 private:
-    
+    std::string _name;
+    int _argc;
+
 public:
-    Function();
+    Function(std::string name, int argc);
     ~Function();
+    
+    static Function &getFunctionByName(std::string name);
 };
 
-Function::Function()
+Function::Function(std::string name, int argc):_name(name), _argc(argc)
 {
 }
 
