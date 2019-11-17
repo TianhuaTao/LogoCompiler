@@ -5,7 +5,7 @@ private:
 public:
     Op();
     virtual ~Op();
-    virtual exec();
+    virtual void exec() = 0;
 };
 
 Op::Op()
