@@ -1,6 +1,8 @@
 #include "Pixel.h"
 #include "Variable.h"
 #include <cmath>
+#include<vector>
+#include "Op.h"
 const double PI = 3.14159265359;
 class Executor
 {
@@ -9,7 +11,7 @@ private:
     int pen_x;
     int pen_y;
     double angle = PI;
-
+    std::vector<Op*> ops;
 public:
     Executor();
     ~Executor();
