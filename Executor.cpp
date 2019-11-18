@@ -88,7 +88,7 @@ void Executor::drawPixel(int x, int y) {
 }
 
 Pixel &Executor::getBufferPixel(int x, int y) {
-    std::cout << "get buffer[" << x << "," << y << "]" << std::endl;
+    // std::cout << "get buffer[" << x << "," << y << "]" << std::endl;
 
     Pixel *p = reinterpret_cast<Pixel *>(buffer);
     p += y * this->width;
