@@ -1,7 +1,8 @@
 #include "Executor.h"
-#include <iostream>
 #include "FileWriter.h"
+#include <iostream>
 Executor::Executor() {
+    penColor = Pixel(255, 255, 255, 1);
 }
 
 Executor::~Executor() {
@@ -18,7 +19,11 @@ void Executor::turn(const Variable &v) {
 }
 
 void Executor::setBackground(int R, int G, int B) {
-    penColor = Pixel(R, G, B, 1);
+    Pixel *pixels = reinterpret_cast<Pixel *>(buffer);
+    Pixel fill(R, G, B, 1);
+    for (size_t i = 0; i < width * height; i++) {
+        pixels[i] = fill;
+    }
 }
 
 void Executor::setPenPosition(int x, int y) {
@@ -79,12 +84,14 @@ void Executor::run() {
     }
 }
 void Executor::drawPixel(int x, int y) {
-    getBufferPixel(x,y) = penColor;
+    getBufferPixel(x, y) = penColor;
 }
 
 Pixel &Executor::getBufferPixel(int x, int y) {
+    std::cout << "get buffer[" << x << "," << y << "]" << std::endl;
+
     Pixel *p = reinterpret_cast<Pixel *>(buffer);
-    p += y * this->height;
+    p += y * this->width;
     p += x;
     return *p;
 }
@@ -92,10 +99,11 @@ Pixel &Executor::getBufferPixel(int x, int y) {
 void Executor::writeFile() {
     FileWriter writer;
     std::string filename = "output.bmp";
-    auto sz = writer.WriteBMP(filename, this->buffer,width * height * sizeof(Pixel));
-    if(sz ==width * height * sizeof(Pixel) ){
-        std::cout<< "write to file "<< filename<<std::endl;
-    } else{
-        std::cerr<< "cannot write to file "<< filename<<std::endl;
+    auto sz = writer.WriteBMP(filename, this->buffer, width, height);
+    std::cout << "write file return value: " << sz << std::endl;
+    if (sz) {
+        std::cout << "write to file " << filename << std::endl;
+    } else {
+        std::cerr << "cannot write to file " << filename << std::endl;
     }
 }

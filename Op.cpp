@@ -61,10 +61,11 @@ void MoveOp::exec() {
         l = step;
     }
     std::cout << "MOVE " << l << " steps" << std::endl;
-    double dx, dy;
-    dx = l * cos(executor->degree);
-    dx = l * sin(executor->degree);
+
     if (executor->clocked) {
+        double dx, dy;
+        dx = l * cos(executor->degree);
+        dx = l * sin(executor->degree);
         executor->logical_pen_x += dx;
         executor->logical_pen_x += dy;
     } else {
@@ -74,6 +75,8 @@ void MoveOp::exec() {
             int physical_pen_x = executor->logical_pen_x;
             int physical_pen_y = executor->logical_pen_y;
             executor->drawPixel(physical_pen_x, physical_pen_y);
+            executor->logical_pen_x += 1 * cos(executor->degree);
+            executor->logical_pen_y += 1 * sin(executor->degree);
         }
     }
 }

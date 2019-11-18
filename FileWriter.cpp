@@ -8,24 +8,26 @@ FileWriter::~FileWriter() {
 
 size_t FileWriter::WriteBMP(std::string filename, const unsigned char *data, int width, int height) {
     FILE *fp;
+    fp = fopen(filename.c_str(), "wb");
+    if(!fp){
+        return 0;
+    }
     unsigned char *img = nullptr;
-    img =new unsigned char[3*width*height] ;
-    int size =width* height*sizeof(Pixel);
+    const Pixel *pixels = reinterpret_cast<const Pixel *>(data);
+    img = new unsigned char[3 * width * height];
+    int size = width * height * sizeof(Pixel);
+    int x, y;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
+            x = i;
+            y = (height - 1) - j;
+            unsigned char r = pixels[j * width + i].r;
+            unsigned char g = pixels[j * width + i].g;
+            unsigned char b = pixels[j * width + i].r;
 
-            unsigned char r = *(data+ j*width+i);
-            unsigned char g = *(data+ j*width+i) ;
-            unsigned char b = *(data+ j*width+i) ;
-            if (r > 255)
-                r = 255;
-            if (g > 255)
-                g = 255;
-            if (b > 255)
-                b = 255;
-            img[(i + j * width) * 3 + 2] =r;
-            img[(i + j * width) * 3 + 1] = g;
-            img[(i + j * width) * 3 + 0] = b;
+            img[(x + y * width) * 3 + 2] = r;
+            img[(x + y * width) * 3 + 1] = g;
+            img[(x + y * width) * 3 + 0] = b;
         }
     }
 
@@ -47,14 +49,15 @@ size_t FileWriter::WriteBMP(std::string filename, const unsigned char *data, int
     bmpinfoheader[10] = (unsigned char)(height >> 16);
     bmpinfoheader[11] = (unsigned char)(height >> 24);
 
-    fp = fopen("img.bmp", "wb");
+    
     fwrite(bmpfileheader, 1, 14, fp);
     fwrite(bmpinfoheader, 1, 40, fp);
     for (int i = 0; i < height; i++) {
-        fwrite(img + (width * (h - i - 1) * 3), 3, w, f);
-        fwrite(bmppad, 1, (4 - (w * 3) % 4) % 4, f);
+        fwrite(img + (width * (height - i - 1) * 3), 3, width, fp);
+        fwrite(bmppad, 1, (4 - (width * 3) % 4) % 4, fp);
     }
 
-    free(img);
-    fclose(f);
+    delete img;
+    fclose(fp);
+    return 1;
 }
