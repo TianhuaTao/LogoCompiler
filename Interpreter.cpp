@@ -12,7 +12,7 @@ int assertSymbolType(Symbol &s, SymbolType type) {
     if (s.getType() == type) {
         return 0;
     }
-    std::cerr << "Unexpected symbol: " << s.getName() << std::endl;
+    std::cerr << "Unexpected symbol: [type="<<s.getType()<<", name=" << s.getName()<<", value="<<s.getValue() <<"]"<< std::endl;
     return -1;
 }
 void Interpreter::compile(const char *filename) {
@@ -26,7 +26,7 @@ void Interpreter::compile(const char *filename) {
     yylex();
     fclose(fp);
 
-    std::cout << "queue size: " << lexQueue.size() << std::endl;
+    std::cout << "symbol queue size: " << lexQueue.size() << std::endl;
 
     // header
     assertSymbolType(lexQueue.front(), ATSIZE);
@@ -51,12 +51,14 @@ void Interpreter::compile(const char *filename) {
     y = nextInt();
     executor.setPenPosition(x, y);
 
-// body
-        while (!lexQueue.empty())
-        {
-            Symbol s = nextSymbol();
-            processSymbol(next);
-        }
+    // body
+    while (!lexQueue.empty()) {
+        Symbol s = nextSymbol();
+        processSymbol(s);
+    }
+
+    executor.run();
+    executor.writeFile();
     // std::ifstream in;
     // in.open(filename);
     // if (in.is_open())
@@ -112,8 +114,7 @@ int Interpreter::nextInt() {
 }
 
 Symbol Interpreter::nextSymbol() {
-    if (lexQueue.empty())
-    {
+    if (lexQueue.empty()) {
         issueError("Expecting a symbol");
     }
     Symbol result = lexQueue.front();
@@ -122,24 +123,42 @@ Symbol Interpreter::nextSymbol() {
 }
 
 void Interpreter::processSymbol(Symbol &symbol) {
-    // if (symbol == "TURN")
-    // {
-    //     auto sym = nextSymbol();
-    //     if (isInt(sym))
-    //     {
-    //         int value = stringToInt(sym);
-    //         executor.turn(value);
-    //     }
-    //     else
-    //     {
-    //         Variable &v = Variable::getVariableByName(sym);
-    //         if (v == Variable::noVar())
-    //         {
-    //             issueError("Variable not found: " + sym);
-    //         }
-    //         executor.turn(v);
-    //     }
-    // }
+    if (symbol.getType() == TURN)
+    {
+        auto sym = nextSymbol();
+        if (sym.getType()==INTCONST)
+        {
+            executor.turn(sym.getValue());
+        }
+        else
+        {
+            assertSymbolType(sym, IDENTIFIER);
+            Variable &v = Variable::getVariableByName(sym.getName());
+            if (v == Variable::noVar())
+            {
+                issueError("Variable not found: " + sym.getName());
+            }
+            executor.turn(v);
+        }
+    }
+    if (symbol.getType() == MOVE)
+    {
+        auto sym = nextSymbol();
+        if (sym.getType()==INTCONST)
+        {
+            executor.move(sym.getValue());
+        }
+        else
+        {
+            assertSymbolType(sym, IDENTIFIER);
+            Variable &v = Variable::getVariableByName(sym.getName());
+            if (v == Variable::noVar())
+            {
+                issueError("Variable not found: " + sym.getName());
+            }
+            executor.move(v);
+        }
+    }
     // if (symbol == "MOVE")
     // {
     //     auto sym = nextSymbol();

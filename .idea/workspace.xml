@@ -12,17 +12,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5912b528-ccf9-4a8f-8d06-6f5c5019b5ee" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Executor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Executor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Executor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Executor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FileWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileWriter.h" beforeDir="false" afterPath="$PROJECT_DIR$/FileWriter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interpreter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Interpreter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interpreter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Interpreter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lexer.l" beforeDir="false" afterPath="$PROJECT_DIR$/Lexer.l" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Op.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Op.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Op.h" beforeDir="false" afterPath="$PROJECT_DIR$/Op.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pixel.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pixel.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Variable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Variable.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Variable.h" beforeDir="false" afterPath="$PROJECT_DIR$/Variable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lex.yy.c" beforeDir="false" afterPath="$PROJECT_DIR$/lex.yy.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utility.h" beforeDir="false" afterPath="$PROJECT_DIR$/utility.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/a.out" beforeDir="false" afterPath="$PROJECT_DIR$/a.out" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,6 +43,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
@@ -73,7 +75,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1574075191156</updated>
-      <workItem from="1574075192491" duration="1119000" />
+      <workItem from="1574075192491" duration="5951000" />
     </task>
     <servers />
   </component>

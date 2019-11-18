@@ -22,8 +22,9 @@ public:
         return _value;
     }
     static Variable &getVariableByName(std::string name);
-    static const Variable &noVar();
+    static  Variable &noVar();
 };
+extern Variable noVarInstance;
 
 bool operator==(const Variable &lhs, const Variable &rhs);
 bool operator!=(const Variable &lhs, const Variable &rhs);

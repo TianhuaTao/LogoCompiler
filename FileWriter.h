@@ -7,6 +7,6 @@ private:
 public:
     FileWriter();
     ~FileWriter();
-    size_t WriteBMP(std::string filename, const char* data, size_t size);
+    size_t WriteBMP(std::string filename, const unsigned char* data, int width, int height);
 };
 
