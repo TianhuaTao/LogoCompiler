@@ -1,3 +1,6 @@
+#if !defined(VARIABLE_H)
+#define VARIABLE_H
+
 #include <string>
 #include <set>
 class Variable
@@ -22,11 +25,9 @@ public:
     static const Variable &noVar();
 };
 
-bool operator==(const Variable &lhs, const Variable &rhs)
-{
-    return lhs.id == rhs.id;
-}
-bool operator!=(const Variable &lhs, const Variable &rhs)
-{
-    return !(lhs == rhs);
-}
+bool operator==(const Variable &lhs, const Variable &rhs);
+bool operator!=(const Variable &lhs, const Variable &rhs);
+
+#endif // VARIABLE_H
+
+

@@ -1,159 +1,208 @@
 #include "Interpreter.h"
-#include <sstream>
+#include "symbols.h"
 #include "utility.h"
-
-Interpreter::Interpreter()
-{
+#include <sstream>
+Interpreter::Interpreter() {
 }
 
-Interpreter::~Interpreter()
-{
+Interpreter::~Interpreter() {
 }
-void Interpreter::compile(const char *filename)
-{
-    std::ifstream in;
-    in.open(filename);
-    if (in.is_open())
-    {
-        std::string lex;
-        while (in >> lex)
-        {
-            this->lexQueue.push(lex);
-        }
-        // Todo: check state
-        in.close();
 
-        // Todo: lexer check
+int assertSymbolType(Symbol &s, SymbolType type) {
+    if (s.getType() == type) {
+        return 0;
+    }
+    std::cerr << "Unexpected symbol: " << s.getName() << std::endl;
+    return -1;
+}
+void Interpreter::compile(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == nullptr) {
+        std::cout << "Cannot open the file" << std::endl;
+        return;
+    }
+    extern FILE *yyin;
+    yyin = fp;
+    yylex();
+    fclose(fp);
 
-        // header
-        lexQueue.pop(); // @SIZE
-        int width, height;
-        width = nextInt();
-        height = nextInt();
-        executor.initNewBuffer(width, height);
+    std::cout << "queue size: " << lexQueue.size() << std::endl;
 
-        lexQueue.pop(); // @BACKGROUND
-        int r, g, b;
-        r = nextInt();
-        g = nextInt();
-        b = nextInt();
-        executor.setBackground(r, g, b);
+    // header
+    assertSymbolType(lexQueue.front(), ATSIZE);
+    lexQueue.pop(); // @SIZE
+    int width, height;
+    width = nextInt();
+    height = nextInt();
+    executor.initNewBuffer(width, height);
 
-        lexQueue.pop(); // @POSITION
-        int x, y;
-        x = nextInt();
-        y = nextInt();
-        executor.setPenPosition(x, y);
+    assertSymbolType(lexQueue.front(), ATBACKGROUND);
+    lexQueue.pop(); // @BACKGROUND
+    int r, g, b;
+    r = nextInt();
+    g = nextInt();
+    b = nextInt();
+    executor.setBackground(r, g, b);
 
-        // body
+    assertSymbolType(lexQueue.front(), ATPOSITION);
+    lexQueue.pop(); // @POSITION
+    int x, y;
+    x = nextInt();
+    y = nextInt();
+    executor.setPenPosition(x, y);
+
+// body
         while (!lexQueue.empty())
         {
-            std::string next = nextSymbol();
+            Symbol s = nextSymbol();
             processSymbol(next);
         }
-    }
+    // std::ifstream in;
+    // in.open(filename);
+    // if (in.is_open())
+    // {
+    //     std::string lex;
+    //     while (in >> lex)
+    //     {
+    //         this->lexQueue.push(lex);
+    //     }
+    //     // Todo: check state
+    //     in.close();
+
+    //     // Todo: lexer check
+
+    //     // header
+    //     lexQueue.pop(); // @SIZE
+    //     int width, height;
+    //     width = nextInt();
+    //     height = nextInt();
+    //     executor.initNewBuffer(width, height);
+
+    //     lexQueue.pop(); // @BACKGROUND
+    //     int r, g, b;
+    //     r = nextInt();
+    //     g = nextInt();
+    //     b = nextInt();
+    //     executor.setBackground(r, g, b);
+
+    //     lexQueue.pop(); // @POSITION
+    //     int x, y;
+    //     x = nextInt();
+    //     y = nextInt();
+    //     executor.setPenPosition(x, y);
+
+    //     // body
+    //     while (!lexQueue.empty())
+    //     {
+    //         std::string next = nextSymbol();
+    //         processSymbol(next);
+    //     }
+    // }
 }
 
-int Interpreter::nextInt()
-{
-    if (lexQueue.empty())
-    {
+int Interpreter::nextInt() {
+    if (lexQueue.empty()) {
         issueError("Expecting a value");
     }
+    assertSymbolType(lexQueue.front(), INTCONST);
     int result;
-    result = stringToInt(lexQueue.front());
+    result = lexQueue.front().getValue();
     lexQueue.pop();
     return result;
 }
 
-std::string Interpreter::nextSymbol()
-{
+Symbol Interpreter::nextSymbol() {
     if (lexQueue.empty())
     {
         issueError("Expecting a symbol");
     }
-    std::string result = lexQueue.front();
+    Symbol result = lexQueue.front();
     lexQueue.pop();
     return result;
 }
 
-void Interpreter::processSymbol(const std::string &symbol)
-{
-    if (symbol == "TURN")
-    {
-        auto sym = nextSymbol();
-        if (isInt(sym))
-        {
-            int value = stringToInt(sym);
-            executor.turn(value);
-        }
-        else
-        {
-            Variable &v = Variable::getVariableByName(sym);
-            if (v == Variable::noVar())
-            {
-                issueError("Variable not found: " + sym);
-            }
-            executor.turn(v);
-        }
-    }
-    if (symbol == "MOVE")
-    {
-        auto sym = nextSymbol();
-        if (isInt(sym))
-        {
-            int value = stringToInt(sym);
-            executor.move(value);
-        }
-        else
-        {
-            Variable &v = Variable::getVariableByName(sym);
-            if (v == Variable::noVar())
-            {
-                issueError("Variable not found: " + sym);
-            }
-            executor.move(v);
-        }
-    }
-    if (symbol == "DEF")
-    {
-        std::string name = nextSymbol();
-        int value = nextInt();
-        executor.def(name, value);
-    }
-    if (symbol == "ADD")
-    {
-        std::string name = nextSymbol();
-        int value = nextInt();
-        executor.add(name, value);
-    }
-    if (symbol == "COLOR")
-    {
-        int r, g, b;
-        r = nextInt();
-        g = nextInt();
-        b = nextInt();
-        executor.setPenColor(r, g, b);
-    }
-    if (symbol == "CLOAK")
-    {
-        executor.cloak();
-    }
+void Interpreter::processSymbol(Symbol &symbol) {
+    // if (symbol == "TURN")
+    // {
+    //     auto sym = nextSymbol();
+    //     if (isInt(sym))
+    //     {
+    //         int value = stringToInt(sym);
+    //         executor.turn(value);
+    //     }
+    //     else
+    //     {
+    //         Variable &v = Variable::getVariableByName(sym);
+    //         if (v == Variable::noVar())
+    //         {
+    //             issueError("Variable not found: " + sym);
+    //         }
+    //         executor.turn(v);
+    //     }
+    // }
+    // if (symbol == "MOVE")
+    // {
+    //     auto sym = nextSymbol();
+    //     if (isInt(sym))
+    //     {
+    //         int value = stringToInt(sym);
+    //         executor.move(value);
+    //     }
+    //     else
+    //     {
+    //         Variable &v = Variable::getVariableByName(sym);
+    //         if (v == Variable::noVar())
+    //         {
+    //             issueError("Variable not found: " + sym);
+    //         }
+    //         executor.move(v);
+    //     }
+    // }
+    // if (symbol == "DEF")
+    // {
+    //     std::string name = nextSymbol();
+    //     int value = nextInt();
+    //     executor.def(name, value);
+    // }
+    // if (symbol == "ADD")
+    // {
+    //     std::string name = nextSymbol();
+    //     int value = nextInt();
+    //     executor.add(name, value);
+    // }
+    // if (symbol == "COLOR")
+    // {
+    //     int r, g, b;
+    //     r = nextInt();
+    //     g = nextInt();
+    //     b = nextInt();
+    //     executor.setPenColor(r, g, b);
+    // }
+    // if (symbol == "CLOAK")
+    // {
+    //     executor.cloak();
+    // }
 
-    if (symbol == "LOOP")
-    {
-        int loop = nextInt();
-    }
-    if (symbol == "FUNC")
-    {
-    }
-    if (symbol == "END")
-    {
-        auto sym = nextSymbol();
-    }
+    // if (symbol == "LOOP")
+    // {
+    //     int loop = nextInt();
+    // }
+    // if (symbol == "FUNC")
+    // {
+    // }
+    // if (symbol == "END")
+    // {
+    //     auto sym = nextSymbol();
+    // }
 
-    if (symbol == "CALL")
-    {
-        auto funcName = nextSymbol();
-    }
+    // if (symbol == "CALL")
+    // {
+    //     auto funcName = nextSymbol();
+    // }
+}
+
+void Interpreter::issueError(std::string err) {
+}
+
+void Interpreter::issueWarning(std::string err) {
 }

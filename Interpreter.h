@@ -3,14 +3,15 @@
 #include <fstream>
 #include <queue>
 #include "Executor.h"
+#include "symbols.h"
 class Interpreter
 {
 private:
-    std::queue<std::string> lexQueue;
+    // std::queue<std::string> lexQueue;
     Executor executor;
     int nextInt();
-    std::string nextSymbol();
-    void processSymbol(const std::string& symbol);
+    Symbol nextSymbol();
+    void processSymbol(Symbol& symbol);
 public:
     Interpreter();
     ~Interpreter();
@@ -20,3 +21,4 @@ public:
 };
 
 
+int assertSymbolType(Symbol& s, SymbolType type);

@@ -1,3 +1,6 @@
+#if !defined(UTILITY_MY_H)
+#define UTILITY_MY_H
+
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -5,13 +8,17 @@
 #include <sstream>
 #include <fstream>
 
-bool isInt(std::string symbol){
+inline bool isInt(std::string symbol){
 
 }
 
 
-int stringToInt(std::string s){
+inline int stringToInt(std::string s){
     int result;
     std::istringstream(s) >> result;
     return result;
 }
+
+#endif // UTILITY_MY_H
+
+

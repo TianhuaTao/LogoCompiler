@@ -1,3 +1,8 @@
+#if !defined(OP_H)
+#define OP_H
+
+#include "Variable.h"
+
 class Op
 {
 private:
@@ -8,13 +13,7 @@ public:
     virtual void exec() = 0;
 };
 
-Op::Op()
-{
-}
 
-Op::~Op()
-{
-}
 
 
 class cloakOp:public Op
@@ -26,13 +25,6 @@ public:
     ~cloakOp();
 };
 
-cloakOp::cloakOp()
-{
-}
-
-cloakOp::~cloakOp()
-{
-}
 
 class StartLoopOp
 {
@@ -43,13 +35,7 @@ public:
     ~StartLoopOp();
 };
 
-StartLoopOp::StartLoopOp(int loops)
-{
-}
 
-StartLoopOp::~StartLoopOp()
-{
-}
 
 class EndLoopOp
 {
@@ -60,13 +46,7 @@ public:
     ~EndLoopOp();
 };
 
-EndLoopOp::EndLoopOp(Op* start)
-{
-}
 
-EndLoopOp::~EndLoopOp()
-{
-}
 
 
 class AddOp
@@ -78,11 +58,7 @@ public:
     ~AddOp();
 };
 
-AddOp::AddOp(Variable* v, int value)
-{
-}
 
-AddOp::~AddOp()
-{
-}
+#endif // OP_H
+
 

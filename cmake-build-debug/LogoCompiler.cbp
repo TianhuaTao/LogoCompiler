@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="LogoCompiler"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/linux_data/LogoCompiler/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/linux_data/LogoCompiler/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LogoCompiler">
+				<Option output="/linux_data/LogoCompiler/cmake-build-debug/LogoCompiler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/linux_data/LogoCompiler/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/linux_data/LogoCompiler/."/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 LogoCompiler"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LogoCompiler/fast">
+				<Option output="/linux_data/LogoCompiler/cmake-build-debug/LogoCompiler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/linux_data/LogoCompiler/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/linux_data/LogoCompiler/."/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 LogoCompiler/fast"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/linux_data/LogoCompiler/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/linux_data/LogoCompiler/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/linux_data/LogoCompiler/Executor.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Executor.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/FileWriter.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/FileWriter.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Interpreter.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Interpreter.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Op.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Op.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Variable.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/Variable.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/lex.yy.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/main.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/symbols.cpp">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/symbols.h">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/tests/test1.logo">
+			<Option target="LogoCompiler"/>
+		</Unit>
+		<Unit filename="/linux_data/LogoCompiler/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
