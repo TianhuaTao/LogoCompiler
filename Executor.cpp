@@ -60,6 +60,10 @@ void Executor::turn(int degree) {
 }
 
 void Executor::setPenColor(int r, int g, int b) {
+    Pixel p(r, g, b, 1);
+    Op *op;
+    op = new ColorOp(this, p);
+    ops.push_back(op);
 }
 
 void Executor::loop(int value) {

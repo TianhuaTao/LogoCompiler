@@ -9,6 +9,7 @@ class Executor
     friend class MoveOp;
     friend class TurnOp;
     friend class AddOp;
+    friend class ColorOp;
 
 private:
     unsigned char *buffer = nullptr;

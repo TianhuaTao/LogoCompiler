@@ -2,6 +2,7 @@
 #define OP_H
 
 #include "Variable.h"
+#include"Pixel.h"
 class Executor;
 class Op {
 private:
@@ -72,5 +73,19 @@ public:
     ~AddOp();
     virtual void exec();
 };
+
+
+class ColorOp:public Op
+{
+private:
+    Pixel pixel;
+
+public:
+    ColorOp(Executor *executor, Pixel p);
+    ~ColorOp();
+    virtual void exec();
+};
+
+
 
 #endif // OP_H

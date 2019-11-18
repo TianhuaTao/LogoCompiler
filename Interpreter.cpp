@@ -189,14 +189,15 @@ void Interpreter::processSymbol(Symbol &symbol) {
     //     int value = nextInt();
     //     executor.add(name, value);
     // }
-    // if (symbol == "COLOR")
-    // {
-    //     int r, g, b;
-    //     r = nextInt();
-    //     g = nextInt();
-    //     b = nextInt();
-    //     executor.setPenColor(r, g, b);
-    // }
+    if (symbol.getType()== COLOR)
+    {
+        // std::cout << "symbol:COLOR" << std::endl;
+        int r, g, b;
+        r = nextInt();
+        g = nextInt();
+        b = nextInt();
+        executor.setPenColor(r, g, b);
+    }
     // if (symbol == "CLOAK")
     // {
     //     executor.cloak();

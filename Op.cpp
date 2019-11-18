@@ -104,3 +104,14 @@ void TurnOp::exec() {
 
 TurnOp::TurnOp(Executor *executor, Variable *var) {
 }
+
+ColorOp::ColorOp(Executor *executor, Pixel p) : Op(executor), pixel(p) {
+}
+
+ColorOp::~ColorOp() {
+}
+void ColorOp::exec() {
+    std::cout << "COLOR"
+              << "[" << (int)pixel.r << "," << (int)pixel.g << "," << (int)pixel.b << "]" << std::endl;
+    executor->penColor = pixel;
+}

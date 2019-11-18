@@ -19,6 +19,7 @@ WHITESPACE			 ([ \t]+)
 
 "TURN"				    {  keyword(TURN);			}
 "MOVE"				    {  keyword(MOVE);			}
+"COLOR"				    {  keyword(COLOR);			}
 "LOOP"				    {  keyword(LOOP);			}
 "DEF"				    {  keyword(DEF);			}
 "FUNC"				    {  keyword(FUNC);			}

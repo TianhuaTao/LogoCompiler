@@ -22,14 +22,14 @@ const std::string &Symbol::getName() const {
 }
 
 int keyword(SymbolType st) {
-    std::cout<< "keyword: code = "<<st<< std::endl;
+    // std::cout<< "keyword: code = "<<st<< std::endl;
 
     lexQueue.push(Symbol(st));
     return st;
 }
 int intConst(const char *s) {
     lexQueue.push(Symbol::intConst(s));
-    std::cout<< "intConst: "<<s<< std::endl;
+    // std::cout<< "intConst: "<<s<< std::endl;
     return INTCONST;
 }
 int identifier(const char *s) {
