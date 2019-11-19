@@ -18,6 +18,7 @@ enum SymbolType {
     FUNC,
     ADD,
     COLOR,
+    CLOAK,
     ATPOSITION,
     ATBACKGROUND,
     ATSIZE,

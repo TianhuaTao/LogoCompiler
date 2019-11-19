@@ -10,6 +10,10 @@ class Executor
     friend class TurnOp;
     friend class AddOp;
     friend class ColorOp;
+    friend class AddOp;
+    friend class EndLoopOp;
+    friend class StartLoopOp;
+    friend class cloakOp;
 
 private:
     unsigned char *buffer = nullptr;
@@ -30,7 +34,7 @@ public:
     void setBackground(int R, int G, int B);
     void setPenPosition(int x, int y);
     void def(std::string name, int value);
-    void add(std::string name, int value);
+    void add(Variable &v, int value);
     void move(const Variable &v);
     void move(int step);
     void cloak();
