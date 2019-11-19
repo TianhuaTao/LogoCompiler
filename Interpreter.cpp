@@ -159,36 +159,25 @@ void Interpreter::processSymbol(Symbol &symbol) {
             executor.move(v);
         }
     }
-    // if (symbol == "MOVE")
-    // {
-    //     auto sym = nextSymbol();
-    //     if (isInt(sym))
-    //     {
-    //         int value = stringToInt(sym);
-    //         executor.move(value);
-    //     }
-    //     else
-    //     {
-    //         Variable &v = Variable::getVariableByName(sym);
-    //         if (v == Variable::noVar())
-    //         {
-    //             issueError("Variable not found: " + sym);
-    //         }
-    //         executor.move(v);
-    //     }
-    // }
+
     // if (symbol == "DEF")
     // {
     //     std::string name = nextSymbol();
     //     int value = nextInt();
     //     executor.def(name, value);
     // }
-    // if (symbol == "ADD")
-    // {
-    //     std::string name = nextSymbol();
-    //     int value = nextInt();
-    //     executor.add(name, value);
-    // }
+    if (symbol.getType() == ADD)
+    {
+        auto sym = nextSymbol();
+        assertSymbolType(sym, IDENTIFIER);
+        int value = nextInt();
+
+        Variable&v =Variable::getVariableByName(sym.getName());
+        if(v == Variable::noVar()){
+        issueError("cannot find variable: "+ sym.getName());
+    }
+        executor.add(v, value);
+    }
     if (symbol.getType()== COLOR)
     {
         // std::cout << "symbol:COLOR" << std::endl;
@@ -198,10 +187,10 @@ void Interpreter::processSymbol(Symbol &symbol) {
         b = nextInt();
         executor.setPenColor(r, g, b);
     }
-    // if (symbol == "CLOAK")
-    // {
-    //     executor.cloak();
-    // }
+    if (symbol.getType() == CLOAK)
+    {
+        executor.cloak();
+    }
 
     // if (symbol == "LOOP")
     // {

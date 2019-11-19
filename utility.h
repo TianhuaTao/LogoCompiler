@@ -9,7 +9,8 @@
 #include <fstream>
 
 inline bool isInt(std::string symbol){
-
+    // placeholder
+    return false;
 }
 
 

@@ -6,7 +6,7 @@ DIGIT 				 ([0-9])
 HEX_DIGIT 			 ([0-9A-Fa-f])
 HEX_INTEGER			 (0[Xx]{HEX_DIGIT}+)
 DEC_INTEGER			 ({DIGIT}+)
-INTEGER				 ({HEX_INTEGER}|{DEC_INTEGER})
+INTEGER				 (-?{WHITESPACE}?{{HEX_INTEGER}|{DEC_INTEGER}})
 IDENTIFIER			 ([A-Za-z][_0-9A-Za-z]*)
 
 S_COMMENT			 ("//"[^\r\n]*{NEWLINE})
@@ -23,6 +23,7 @@ WHITESPACE			 ([ \t]+)
 "LOOP"				    {  keyword(LOOP);			}
 "DEF"				    {  keyword(DEF);			}
 "FUNC"				    {  keyword(FUNC);			}
+"CLOAK"				    {  keyword(CLOAK);			}
 "ADD"				    {  keyword(ADD);			}
 "@POSITION"				{   keyword(ATPOSITION);			}
 "@BACKGROUND"			{   keyword(ATBACKGROUND);			}

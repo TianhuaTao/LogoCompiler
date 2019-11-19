@@ -2,9 +2,10 @@
 #define OP_H
 
 #include "Variable.h"
-#include"Pixel.h"
+#include "Pixel.h"
 class Executor;
-class Op {
+class Op
+{
 private:
 protected:
     Executor *executor = nullptr;
@@ -16,7 +17,8 @@ public:
     virtual void exec() = 0;
 };
 
-class MoveOp : public Op {
+class MoveOp : public Op
+{
 private:
     int step;
     Variable *var = nullptr;
@@ -29,7 +31,8 @@ public:
     virtual void exec();
 };
 
-class TurnOp : public Op {
+class TurnOp : public Op
+{
 private:
     int degree;
     Variable *var = nullptr;
@@ -42,7 +45,8 @@ public:
     virtual void exec();
 };
 
-class cloakOp : public Op {
+class cloakOp : public Op
+{
 private:
 public:
     cloakOp(Executor *executor);
@@ -50,7 +54,8 @@ public:
     virtual void exec();
 };
 
-class StartLoopOp {
+class StartLoopOp
+{
 private:
 public:
     StartLoopOp(int loops);
@@ -58,7 +63,8 @@ public:
     ~StartLoopOp();
 };
 
-class EndLoopOp {
+class EndLoopOp
+{
 private:
 public:
     EndLoopOp(Op *start);
@@ -66,16 +72,7 @@ public:
     ~EndLoopOp();
 };
 
-class AddOp {
-private:
-public:
-    AddOp(Variable *v, int value);
-    ~AddOp();
-    virtual void exec();
-};
-
-
-class ColorOp:public Op
+class ColorOp : public Op
 {
 private:
     Pixel pixel;
@@ -86,6 +83,16 @@ public:
     virtual void exec();
 };
 
+class AddOp : public Op
+{
+private:
+    Variable &var;
+    int value;
 
+public:
+    AddOp(Executor *executor, Variable &v, int value);
+    ~AddOp();
+    virtual void exec();
+};
 
 #endif // OP_H

@@ -34,7 +34,11 @@ void Executor::setPenPosition(int x, int y) {
 void Executor::def(std::string name, int value) {
 }
 
-void Executor::add(std::string name, int value) {
+void Executor::add(Variable& v, int value) {
+    
+    Op *op;
+    op = new AddOp(this, v, value);
+    ops.push_back(op);
 }
 
 void Executor::move(const Variable &v) {
