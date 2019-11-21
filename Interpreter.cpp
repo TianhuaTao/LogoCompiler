@@ -60,47 +60,6 @@ void Interpreter::compile(const char *filename) {
 
     executor.run();
     executor.writeFile();
-    // std::ifstream in;
-    // in.open(filename);
-    // if (in.is_open())
-    // {
-    //     std::string lex;
-    //     while (in >> lex)
-    //     {
-    //         this->lexQueue.push(lex);
-    //     }
-    //     // Todo: check state
-    //     in.close();
-
-    //     // Todo: lexer check
-
-    //     // header
-    //     lexQueue.pop(); // @SIZE
-    //     int width, height;
-    //     width = nextInt();
-    //     height = nextInt();
-    //     executor.initNewBuffer(width, height);
-
-    //     lexQueue.pop(); // @BACKGROUND
-    //     int r, g, b;
-    //     r = nextInt();
-    //     g = nextInt();
-    //     b = nextInt();
-    //     executor.setBackground(r, g, b);
-
-    //     lexQueue.pop(); // @POSITION
-    //     int x, y;
-    //     x = nextInt();
-    //     y = nextInt();
-    //     executor.setPenPosition(x, y);
-
-    //     // body
-    //     while (!lexQueue.empty())
-    //     {
-    //         std::string next = nextSymbol();
-    //         processSymbol(next);
-    //     }
-    // }
 }
 
 int Interpreter::nextInt() {
@@ -147,6 +106,7 @@ void Interpreter::processSymbol(Symbol &symbol) {
         auto sym = nextSymbol();
         if (sym.getType()==INTCONST)
         {
+            // Todo: use VariableWrapper
             executor.move(sym.getValue());
         }
         else
@@ -154,6 +114,8 @@ void Interpreter::processSymbol(Symbol &symbol) {
             assertSymbolType(sym, IDENTIFIER);
             // Variable &v = Variable::getVariableByName(sym.getName());
             // std::cout << "debug: " << v.getValue() << std::endl;
+
+            // Todo: use VariableWrapper
             executor.move(sym.getName());
         }
     }
@@ -167,13 +129,21 @@ void Interpreter::processSymbol(Symbol &symbol) {
     else if (symbol.getType() == ADD) {
         auto sym = nextSymbol();
         assertSymbolType(sym, IDENTIFIER);
-        int value = nextInt();
-
-        Variable&v =Variable::getVariableByName(sym.getName());
-        if(v == Variable::noVar()){
-        issueError("cannot find variable: "+ sym.getName());
-    }
-        executor.add(v, value);
+        // int value = nextInt();
+        auto addValue = nextSymbol();
+        VariableWrapper value(0);
+        if (addValue.getType() == INTCONST) {
+            value = VariableWrapper(addValue.getValue());
+        } else {
+            assertSymbolType(addValue, IDENTIFIER);
+            value = VariableWrapper(addValue.getName());
+        }
+        executor.add(VariableWrapper(sym.getName()), value);
+        // Variable&v =Variable::getVariableByName(sym.getName());
+        // if(v == Variable::noVar()){
+        // issueError("cannot find variable: "+ sym.getName());
+    
+        
     } else if (symbol.getType() == COLOR) {
         // std::cout << "symbol:COLOR" << std::endl;
         int r, g, b;

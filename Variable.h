@@ -25,6 +25,7 @@ public:
     {
         return _value;
     }
+    void addValue(int value) { _value += value; }
     std::string getName() const { return _name; }
     static Variable &getVariableByName(std::string name);
     static void deleteVariableByName(std::string name);
@@ -52,6 +53,7 @@ public:
     bool isVariable() const{
         return _variable != 0;
     }
+    std::string getVariableName() const;
     int getValue() const;
 };
 

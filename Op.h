@@ -88,21 +88,24 @@ public:
 
 class ColorOp : public Op {
 private:
-    Pixel pixel;
+    // Pixel pixel;
+    VariableWrapper r;
+    VariableWrapper g;
+    VariableWrapper b;
 
 public:
-    ColorOp(Executor *executor, Pixel p);
+    ColorOp(Executor *executor, VariableWrapper r, VariableWrapper g,VariableWrapper b):Op(executor),r(r),g(g),b(b){}
     ~ColorOp();
     virtual void exec();
 };
 
 class AddOp : public Op {
 private:
-    Variable &var;
-    int value;
+    VariableWrapper var;
+    VariableWrapper value;
 
 public:
-    AddOp(Executor *executor, Variable &v, int value);
+    AddOp(Executor *executor, VariableWrapper vw, VariableWrapper value);
     ~AddOp();
     virtual void exec();
 };

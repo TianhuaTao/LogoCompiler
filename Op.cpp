@@ -1,8 +1,8 @@
 #include "Op.h"
 #include "Executor.h"
+#include "utility.h"
 #include <cmath>
 #include <iostream>
-#include"utility.h"
 Op::Op() {
 }
 
@@ -91,6 +91,8 @@ MoveOp::~MoveOp() {
 }
 
 void MoveOp::exec() {
+    std::cout << "debug: in MoveOp::exec()"<< std::endl;
+
     int l;
     // if (var) {
     //     l = var->getValue();
@@ -149,32 +151,39 @@ void TurnOp::exec() {
 // TurnOp::TurnOp(Executor *executor, Variable *var) {
 // }
 
-ColorOp::ColorOp(Executor *executor, Pixel p) : Op(executor), pixel(p) {
-}
+// ColorOp::ColorOp(Executor *executor, Pixel p) : Op(executor), pixel(p) {
+// }
 
 ColorOp::~ColorOp() {
 }
 void ColorOp::exec() {
     std::cout << "COLOR"
-              << "[" << (int)pixel.r << "," << (int)pixel.g << "," << (int)pixel.b << "]" << std::endl;
+              << "[" << r.getValue() << "," << g.getValue() << "," << b.getValue() << "]" << std::endl;
+    Pixel pixel(r.getValue(), g.getValue(), b.getValue(), 1);
     executor->penColor = pixel;
     executor->clocked = false;
+    std::cout << "ColorOp::exec() done" << std::endl;
 }
 
-AddOp::AddOp(Executor *executor, Variable &v, int value) : Op(executor), var(v), value(value) {
+AddOp::AddOp(Executor *executor, VariableWrapper vw, VariableWrapper value) : Op(executor), var(vw), value(value) {
 }
 
-AddOp::~AddOp() {
-}
+AddOp::~AddOp() {}
 
 void AddOp::exec() {
+    std::cout << "ADD " << var.getVariableName() << " " << value.getValue() << std::endl;
+    Variable &v = Variable::getVariableByName(var.getVariableName());
+    if (v == Variable::noVar()) {
+
+    } else {
+        v.addValue(value.getValue());
+    }
 }
 
 CallOp::CallOp(Executor *executor, std::string name, std::vector<Symbol> paraList) : Op(executor) {
 }
 
-CallOp::~CallOp() {
-}
+CallOp::~CallOp() {}
 
 DefOp::DefOp(Executor *executor, std::string name, VariableWrapper vw) : name(name), varWrapper(vw) {
 }

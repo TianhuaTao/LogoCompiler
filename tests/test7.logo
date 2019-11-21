@@ -5,6 +5,11 @@
 LOOP 0
     TURN 1 
 END LOOP
-MOVE 100
+DEF x 800
+LOOP 40
+    MOVE x
+    ADD x -20
+    TURN 90
+END LOOP
 
 

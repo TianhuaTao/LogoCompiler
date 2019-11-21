@@ -91,3 +91,15 @@ int VariableWrapper::getValue() const {
         return _value;
     }
 }
+
+std::string VariableWrapper::getVariableName() const{
+    if (isVar) {
+        if (_variable) {
+            return _variable->getName();
+        } else {
+            return varName;
+        }
+    } else {
+        return "$NO_NAME$";
+    }
+}

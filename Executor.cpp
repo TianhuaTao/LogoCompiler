@@ -20,9 +20,6 @@ void Executor::initNewBuffer(int width, int height) {
     buffer = new unsigned char[width * height * sizeof(Pixel)];
 }
 
-// void Executor::turn(std::string varName) {
-
-// }
 
 void Executor::setBackground(int R, int G, int B) {
     Pixel *pixels = reinterpret_cast<Pixel *>(buffer);
@@ -43,10 +40,10 @@ void Executor::def(std::string name, int value) {
     current_ops->push_back(op);
 }
 
-void Executor::add(Variable &v, int value) {
+void Executor::add(VariableWrapper vw, VariableWrapper value) {
 
     Op *op;
-    op = new AddOp(this, v, value);
+    op = new AddOp(this, vw, value);
     current_ops->push_back(op);
 }
 
@@ -82,10 +79,17 @@ void Executor::turn(VariableWrapper vw) {
     current_ops->push_back(op);
 }
 
-void Executor::setPenColor(int r, int g, int b) {
-    Pixel p(r, g, b, 1);
+// void Executor::setPenColor(int r, int g, int b) {
+//     Pixel p(r, g, b, 1);
+//     Op *op;
+//     op = new ColorOp(this, p);
+//     current_ops->push_back(op);
+// }
+
+void Executor::setPenColor(VariableWrapper r, VariableWrapper g, VariableWrapper b) {
+    // Pixel p(r, g, b, 1);
     Op *op;
-    op = new ColorOp(this, p);
+    op = new ColorOp(this, r,g,b);
     current_ops->push_back(op);
 }
 

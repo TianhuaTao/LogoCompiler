@@ -42,14 +42,18 @@ public:
     void setBackground(int R, int G, int B);
     void setPenPosition(int x, int y);
     void def(std::string name, int value);
-    void add(Variable &v, int value);
+    // void add(Variable &v, int value);
+    void add(VariableWrapper vw, VariableWrapper value);
+
     void move(std::string varName);
     void move(int step);
     void cloak();
     void turn(int angle);
     void turn(std::string varName);
     void turn(VariableWrapper vw);
-    void setPenColor(int r, int g, int b);
+    // void setPenColor(int r, int g, int b);
+    void setPenColor(VariableWrapper r, VariableWrapper g, VariableWrapper b);
+
     void loop(int value);
     void endLoop();
     void startFuncDef(std::string name, int argc);
