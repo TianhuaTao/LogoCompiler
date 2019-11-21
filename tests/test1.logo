@@ -17,11 +17,9 @@ LOOP 180
 END LOOP
 
 
-DEF count 0
 FUNC circle(step)
     LOOP 360
         MOVE step
         TURN 1
     END LOOP
-    ADD count 1
 END FUNC

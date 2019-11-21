@@ -160,12 +160,12 @@ void Interpreter::processSymbol(Symbol &symbol) {
         }
     }
 
-    // if (symbol == "DEF")
-    // {
-    //     std::string name = nextSymbol();
-    //     int value = nextInt();
-    //     executor.def(name, value);
-    // }
+    else if (symbol.getType() == ENDLOOP) {
+        executor.endLoop();
+    } else if (symbol.getType() == ENDFUNC) {
+        
+    }
+
     else if (symbol.getType() == ADD) {
         auto sym = nextSymbol();
         assertSymbolType(sym, IDENTIFIER);
@@ -225,6 +225,7 @@ std::vector<Symbol> Interpreter::getIdentifierList() {
             issueError("Symbol " + it->getName() + " is not a valid identifier");
         }
     }
+    return list;
 }
 
 void Interpreter::issueError(std::string err) {

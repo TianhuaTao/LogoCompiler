@@ -13,11 +13,19 @@ all: LogoCompiler
 LogoCompiler: $(OBJS)
 	$(CXX) $(LDFLAGS) -o LogoCompiler $(OBJS) $(LDLIBS)
 
+# lex.yy.cpp: lex.yy.c
+# 	mv lex.yy.c lex.yy.cpp
+
+# lex.yy.c: Lexer.l
+# 	lex Lexer.l
+
 depend: .depend
 
 .depend: $(SRCS)
 	$(RM) ./.depend
 	$(CXX) $(CPPFLAGS) -MM $^>>./.depend;
+
+
 
 clean:
 	$(RM) $(OBJS)

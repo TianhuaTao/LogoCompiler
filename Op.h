@@ -59,9 +59,10 @@ public:
 
 class StartLoopOp : public Op {
 private:
+    const int prop_loops;
     int loops;
     Op *end;
-
+    
 public:
     StartLoopOp(Executor *executor, int loops);
     virtual void exec();

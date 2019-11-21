@@ -2,7 +2,7 @@
 #include "FileWriter.h"
 #include <iostream>
 Executor::Executor() {
-    penColor = Pixel(255, 255, 255, 1);
+    penColor = Pixel(0, 0, 0, 1);
     OpsQueue *globalOps = new OpsQueue("0global");
     current_OpsQueue = globalOps;
     current_ops = current_OpsQueue->getOps();
@@ -39,8 +39,8 @@ void Executor::setPenPosition(int x, int y) {
 void Executor::def(std::string name, int value) {
 }
 
-void Executor::add(Variable& v, int value) {
-    
+void Executor::add(Variable &v, int value) {
+
     Op *op;
     op = new AddOp(this, v, value);
     current_ops->push_back(op);
@@ -89,28 +89,26 @@ void Executor::endLoop() {
         if ((*it)->isEndLoopOp()) {
             cnt++;
         }
-        if ((*it)->isStartLoopOp()){
+        if ((*it)->isStartLoopOp()) {
             cnt--;
-            if(cnt==0){
+            if (cnt == 0) {
                 start = *it;
+                
                 break;
             }
         }
     }
-    if(start){
+    if (start) {
         op = new EndLoopOp(this, start);
+        dynamic_cast<StartLoopOp *>(start)->setEndLoopOp(op);
         current_ops->push_back(op);
-    }else
-    {
+    } else {
         issueError("unexpected END LOOP");
     }
 }
- 
+
 void Executor::startFuncDef(std::string name, int argc) {
 }
-
-// void Executor::draw(int pixel) {
-// }
 
 void Executor::run() {
     std::cout << current_ops->size() << " ops to run" << std::endl;
@@ -130,11 +128,14 @@ void Executor::drawPixel(int x, int y) {
 
 Pixel &Executor::getBufferPixel(int x, int y) {
     // std::cout << "get buffer[" << x << "," << y << "]" << std::endl;
-
-    Pixel *p = reinterpret_cast<Pixel *>(buffer);
-    p += y * this->width;
-    p += x;
-    return *p;
+    if (0 <= x && x < width && 0 <= y && y < height) {
+        Pixel *p = reinterpret_cast<Pixel *>(buffer);
+        p += y * this->width;
+        p += x;
+        return *p;
+    } else {
+        return _noPixel;
+    }
 }
 
 void Executor::writeFile() {

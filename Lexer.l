@@ -6,7 +6,8 @@ DIGIT 				 ([0-9])
 HEX_DIGIT 			 ([0-9A-Fa-f])
 HEX_INTEGER			 (0[Xx]{HEX_DIGIT}+)
 DEC_INTEGER			 ({DIGIT}+)
-INTEGER				 (^[-+]?{WHITESPACE}?{HEX_INTEGER}|{DEC_INTEGER})
+INTEGER				 ({HEX_INTEGER}|{DEC_INTEGER})
+SIGNED_INTEGER		 ([+-]?{INTEGER})
 IDENTIFIER			 ([A-Za-z][_0-9A-Za-z]*)
 
 S_COMMENT			 ("//"[^\r\n]*{NEWLINE})
@@ -35,7 +36,7 @@ WHITESPACE			 ([ \t]+)
 ")"                     {  keyword(RPAR);			}
 
 
-{INTEGER}			{  intConst(yytext);			}						    
+{SIGNED_INTEGER}			{  intConst(yytext);			}						    
 {IDENTIFIER}		{  identifier(yytext);			}
 .					{ issueError(yytext); }
 

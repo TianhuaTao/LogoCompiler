@@ -31,7 +31,7 @@ private:
     Pixel& getBufferPixel(int x, int y);
     int width;
     int height;
-
+    Pixel _noPixel; // a special pixel, all invalid pixels point to this
 public:
     Executor();
     ~Executor();
