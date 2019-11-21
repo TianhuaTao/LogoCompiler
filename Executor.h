@@ -3,6 +3,7 @@
 #include <cmath>
 #include<vector>
 #include "Op.h"
+#include "OpsQueue.h"
 const double PI = 3.14159265359;
 class Executor
 {
@@ -20,12 +21,17 @@ private:
     double logical_pen_x;
     double logical_pen_y;
     int degree = 90;    // range [0,359]
-    std::vector<Op*> ops;
+    size_t pc;
+    std::vector<OpsQueue *> allOps;
+    OpsQueue *current_OpsQueue;
+    std::vector<Op *> *current_ops;
+
     bool clocked = false;
     Pixel penColor;
     Pixel& getBufferPixel(int x, int y);
     int width;
     int height;
+
 public:
     Executor();
     ~Executor();
@@ -42,6 +48,7 @@ public:
     void turn(const Variable &v);
     void setPenColor(int r, int g, int b);
     void loop(int value);
+    void endLoop();
     void startFuncDef(std::string name, int argc);
     void drawPixel(int x,int y);
     void writeFile();

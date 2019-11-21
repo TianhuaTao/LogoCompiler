@@ -3,6 +3,7 @@
 
 #include "Variable.h"
 #include "Pixel.h"
+#include "symbols.h"
 class Executor;
 class Op
 {
@@ -15,6 +16,8 @@ public:
     Op(Executor *executor);
     virtual ~Op();
     virtual void exec() = 0;
+    virtual bool isStartLoopOp() { return false; }
+    virtual bool isEndLoopOp() { return false; }
 };
 
 class MoveOp : public Op
@@ -54,22 +57,30 @@ public:
     virtual void exec();
 };
 
-class StartLoopOp
-{
+class StartLoopOp : public Op {
 private:
+    int loops;
+    Op *end;
+
 public:
-    StartLoopOp(int loops);
+    StartLoopOp(Executor *executor, int loops);
     virtual void exec();
+    void setEndLoopOp(Op *end) { this->end = end; }
+    void minusOneLoop() { loops--; }
+    int getLoopRemain() { return loops; }
     ~StartLoopOp();
+    virtual bool isStartLoopOp() { return true; }
 };
 
-class EndLoopOp
-{
+class EndLoopOp : public Op {
 private:
+    Op *start;
+
 public:
-    EndLoopOp(Op *start);
+    EndLoopOp(Executor *executor,Op *start);
     virtual void exec();
     ~EndLoopOp();
+    virtual bool isEndLoopOp() { return true; }
 };
 
 class ColorOp : public Op
@@ -94,5 +105,18 @@ public:
     ~AddOp();
     virtual void exec();
 };
+
+
+class CallOp:public Op
+{
+private:
+    
+public:
+    CallOp(Executor *executor,std::string name, std::vector<Symbol> paraList);
+    ~CallOp();
+};
+
+
+
 
 #endif // OP_H

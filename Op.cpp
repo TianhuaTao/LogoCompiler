@@ -16,7 +16,7 @@ Op::Op(Executor *executor) : executor(executor)
 
 cloakOp::cloakOp(Executor *executor) : Op(executor)
 {
-    executor->clocked = true;
+    
 }
 
 cloakOp::~cloakOp()
@@ -25,10 +25,10 @@ cloakOp::~cloakOp()
 
 void cloakOp::exec()
 {
+    executor->clocked = true;
 }
 
-StartLoopOp::StartLoopOp(int loops)
-{
+StartLoopOp::StartLoopOp(Executor *executor,int loops):Op(executor),loops(loops) {
 }
 
 StartLoopOp::~StartLoopOp()
@@ -36,28 +36,54 @@ StartLoopOp::~StartLoopOp()
 }
 
 void StartLoopOp::exec()
-{
+{   
+    // will execute only once, just check if loops = 0
+    if(loops< 0){
+        issueError("loop value should be non-negative");
+    }
+    if(loops==0){
+        bool isEndLoop = false;
+
+        while (!isEndLoop && executor->pc< executor->current_ops->size()) {
+            executor->pc++;
+            std::vector<Op *> *ops = executor->current_ops;
+            Op *op = (*ops)[executor->pc];
+            isEndLoop = (op== end);
+        }
+
+        executor->pc++;
+    }
 }
 
-EndLoopOp::EndLoopOp(Op *start)
-{
+EndLoopOp::EndLoopOp(Executor *executor, Op *start) :Op(executor) ,start(start){
 }
 
 EndLoopOp::~EndLoopOp()
 {
+    size_t maybe_pc = executor->pc;
+    bool isStartLoop = false;
+    Op *op = nullptr;
+    while (!isStartLoop) {
+        maybe_pc--;
+        std::vector<Op *> *ops = executor->current_ops;
+        op = (*ops)[executor->pc];
+        isStartLoop = (op == start);
+    }
+    StartLoopOp *sop = dynamic_cast<StartLoopOp *>(op);
+    if (sop->getLoopRemain() > 0){
+        sop->minusOneLoop();
+        executor->pc = maybe_pc;
+    }else
+    {
+        // don't need to change pc;
+    }
 }
 
 void EndLoopOp::exec()
 {
+
 }
 
-
-
-
-
-void AddOp::exec()
-{
-}
 
 MoveOp::MoveOp(Executor *executor, int step) : Op(executor), step(step)
 {
@@ -161,4 +187,10 @@ AddOp::~AddOp()
 void AddOp::exec()
 {
     
+}
+
+CallOp::CallOp(Executor *executor, std::string name, std::vector<Symbol> paraList) : Op(executor) {
+}
+
+CallOp::~CallOp() {
 }

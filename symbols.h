@@ -15,6 +15,7 @@ enum SymbolType {
     TURN,
     LOOP,
     DEF,
+    CALL,
     FUNC,
     ADD,
     COLOR,
@@ -28,7 +29,8 @@ enum SymbolType {
     RPAR,
     IDENTIFIER,
     INTCONST,
-    MINUS
+    MINUS,
+    COMMA
 };
 
 class Symbol

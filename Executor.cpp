@@ -3,6 +3,11 @@
 #include <iostream>
 Executor::Executor() {
     penColor = Pixel(255, 255, 255, 1);
+    OpsQueue *globalOps = new OpsQueue("0global");
+    current_OpsQueue = globalOps;
+    current_ops = current_OpsQueue->getOps();
+
+    allOps.push_back(globalOps);
 }
 
 Executor::~Executor() {
@@ -38,7 +43,7 @@ void Executor::add(Variable& v, int value) {
     
     Op *op;
     op = new AddOp(this, v, value);
-    ops.push_back(op);
+    current_ops->push_back(op);
 }
 
 void Executor::move(const Variable &v) {
@@ -47,32 +52,60 @@ void Executor::move(const Variable &v) {
 void Executor::move(int step) {
     Op *op;
     op = new MoveOp(this, step);
-    ops.push_back(op);
+    current_ops->push_back(op);
 }
 
 void Executor::cloak() {
     Op *op;
     op = new cloakOp(this);
-    ops.push_back(op);
+    current_ops->push_back(op);
 }
 
 void Executor::turn(int degree) {
 
     Op *op;
     op = new TurnOp(this, degree);
-    ops.push_back(op);
+    current_ops->push_back(op);
 }
 
 void Executor::setPenColor(int r, int g, int b) {
     Pixel p(r, g, b, 1);
     Op *op;
     op = new ColorOp(this, p);
-    ops.push_back(op);
+    current_ops->push_back(op);
 }
 
 void Executor::loop(int value) {
+    Op *op;
+    op = new StartLoopOp(this, value);
+    current_ops->push_back(op);
 }
 
+void Executor::endLoop() {
+    Op *op;
+    Op *start = nullptr;
+    int cnt = 1;
+    for (auto it = current_ops->rbegin(); it != current_ops->rend(); it++) {
+        if ((*it)->isEndLoopOp()) {
+            cnt++;
+        }
+        if ((*it)->isStartLoopOp()){
+            cnt--;
+            if(cnt==0){
+                start = *it;
+                break;
+            }
+        }
+    }
+    if(start){
+        op = new EndLoopOp(this, start);
+        current_ops->push_back(op);
+    }else
+    {
+        issueError("unexpected END LOOP");
+    }
+}
+ 
 void Executor::startFuncDef(std::string name, int argc) {
 }
 
@@ -80,14 +113,14 @@ void Executor::startFuncDef(std::string name, int argc) {
 // }
 
 void Executor::run() {
-    std::cout << ops.size() << " ops to run" << std::endl;
+    std::cout << current_ops->size() << " ops to run" << std::endl;
 
-    size_t ops_cnt = ops.size();
-    size_t pc = 0;
-    while (pc != ops.size()) {
+    size_t ops_cnt = current_ops->size();
+    pc = 0;
+    while (pc != current_ops->size()) {
         std::cout << "pc[" << pc << "]: ";
 
-        ops[pc]->exec();
+        (*current_ops)[pc]->exec();
         pc++;
     }
 }

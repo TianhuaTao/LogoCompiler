@@ -12,6 +12,9 @@ private:
     int nextInt();
     Symbol nextSymbol();
     void processSymbol(Symbol& symbol);
+    std::vector<Symbol> getParaList();
+    std::vector<Symbol> getIdentifierList();
+
 public:
     Interpreter();
     ~Interpreter();

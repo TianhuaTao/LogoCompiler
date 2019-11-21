@@ -141,7 +141,7 @@ void Interpreter::processSymbol(Symbol &symbol) {
             executor.turn(v);
         }
     }
-    if (symbol.getType() == MOVE)
+    else if (symbol.getType() == MOVE)
     {
         auto sym = nextSymbol();
         if (sym.getType()==INTCONST)
@@ -166,8 +166,7 @@ void Interpreter::processSymbol(Symbol &symbol) {
     //     int value = nextInt();
     //     executor.def(name, value);
     // }
-    if (symbol.getType() == ADD)
-    {
+    else if (symbol.getType() == ADD) {
         auto sym = nextSymbol();
         assertSymbolType(sym, IDENTIFIER);
         int value = nextInt();
@@ -177,41 +176,61 @@ void Interpreter::processSymbol(Symbol &symbol) {
         issueError("cannot find variable: "+ sym.getName());
     }
         executor.add(v, value);
-    }
-    if (symbol.getType()== COLOR)
-    {
+    } else if (symbol.getType() == COLOR) {
         // std::cout << "symbol:COLOR" << std::endl;
         int r, g, b;
         r = nextInt();
         g = nextInt();
         b = nextInt();
         executor.setPenColor(r, g, b);
-    }
-    if (symbol.getType() == CLOAK)
-    {
+    } else if (symbol.getType() == CLOAK) {
         executor.cloak();
+    } else if (symbol.getType() == LOOP) {
+        int loop = nextInt();
+        executor.loop(loop);
+    } else if (symbol.getType() == FUNC) {
+        auto funcSymbol = nextSymbol();
+        assertSymbolType(funcSymbol, IDENTIFIER);
+        auto list = getIdentifierList();
+        executor.startFuncDef(funcSymbol.getName(), list.size());
+        }
+
+    else if (symbol.getType() == CALL) {
+        auto funcSymbol = nextSymbol();
+        assertSymbolType(funcSymbol, IDENTIFIER);
+        auto list = getParaList();
     }
-
-    // if (symbol == "LOOP")
-    // {
-    //     int loop = nextInt();
-    // }
-    // if (symbol == "FUNC")
-    // {
-    // }
-    // if (symbol == "END")
-    // {
-    //     auto sym = nextSymbol();
-    // }
-
-    // if (symbol == "CALL")
-    // {
-    //     auto funcName = nextSymbol();
-    // }
+}
+std::vector<Symbol> Interpreter::getParaList() {
+    std::vector<Symbol> result;
+    auto symbol = nextSymbol();
+    assertSymbolType(symbol, LPAR);
+    symbol = nextSymbol();
+    while (symbol.getType() !=RPAR)
+    {
+        if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
+            result.push_back(symbol);
+        }
+        symbol = nextSymbol();
+        if (symbol.getType() == COMMA){
+            symbol = nextSymbol();
+        }
+    }
+    return result;
+}
+std::vector<Symbol> Interpreter::getIdentifierList() {
+    auto list = getParaList();
+    for (auto it = list.begin(); it != list.end();it++){
+        if(it->getType()!= IDENTIFIER){
+            issueError("Symbol " + it->getName() + " is not a valid identifier");
+        }
+    }
 }
 
 void Interpreter::issueError(std::string err) {
+    std::cerr << "Error: " << err << std::endl;
 }
 
 void Interpreter::issueWarning(std::string err) {
+    std::cout << "Warning: " << err << std::endl;
 }
