@@ -2,6 +2,7 @@
 #include "Executor.h"
 #include <cmath>
 #include <iostream>
+#include"utility.h"
 Op::Op() {
 }
 
@@ -18,7 +19,7 @@ cloakOp::~cloakOp() {
 }
 
 void cloakOp::exec() {
-    std::cout << "CLOAK "  << std::endl;
+    std::cout << "CLOAK " << std::endl;
     executor->clocked = true;
 }
 
@@ -35,8 +36,7 @@ void StartLoopOp::exec() {
 
     if (loops < 0) {
         issueError("loop value should be non-negative");
-    }else
-    if (loops == 0) {
+    } else if (loops == 0) {
         bool isEndLoop = false;
 
         while (!isEndLoop && executor->pc < executor->current_ops->size()) {
@@ -48,12 +48,9 @@ void StartLoopOp::exec() {
             isEndLoop = (op == end);
         }
 
-        
-    }else
-    {
+    } else {
         loops--;
     }
-    
 }
 
 EndLoopOp::EndLoopOp(Executor *executor, Op *start) : Op(executor), start(start) {
@@ -87,19 +84,20 @@ void EndLoopOp::exec() {
     }
 }
 
-MoveOp::MoveOp(Executor *executor, int step) : Op(executor), step(step) {
-}
+// MoveOp::MoveOp(Executor *executor, int step) : Op(executor), step(step) {
+// }
 
 MoveOp::~MoveOp() {
 }
 
 void MoveOp::exec() {
     int l;
-    if (var) {
-        l = var->getValue();
-    } else {
-        l = step;
-    }
+    // if (var) {
+    //     l = var->getValue();
+    // } else {
+    //     l = step;
+    // }
+    l = _varWrapper.getValue();
     std::cout << "MOVE " << l << " steps" << std::endl;
     std::cout << "\tlogical_location:[" << executor->logical_pen_x << "," << executor->logical_pen_y << "]" << std::endl;
 
@@ -122,31 +120,34 @@ void MoveOp::exec() {
     }
 }
 
-MoveOp::MoveOp(Executor *executor, Variable *var) {
-}
+// MoveOp::MoveOp(Executor *executor, Variable *var) {
+// }
 
-TurnOp::TurnOp(Executor *executor, int degree) : Op(executor), degree(degree) {
-}
+// TurnOp::TurnOp(Executor *executor, int degree) : Op(executor), degree(degree) {
+// }
 
 TurnOp::~TurnOp() {
 }
 
 void TurnOp::exec() {
-    if (var) {
-        int d = var->getValue();
-        std::cout << "TURN " << d << " degree" << std::endl;
-        executor->degree -= d;
-    } else {
-        std::cout << "TURN " << degree << " degree" << std::endl;
-        executor->degree -= degree;
-    }
+    int d = varWrapper.getValue();
+    // if (var) {
+    //     int d = var->getValue();
+    //     std::cout << "TURN " << d << " degree" << std::endl;
+    //     executor->degree -= d;
+    // } else {
+    //     std::cout << "TURN " << degree << " degree" << std::endl;
+    //     executor->degree -= degree;
+    // }
+    std::cout << "TURN " << d << " degree" << std::endl;
+    executor->degree -= d;
     std::cout << "\tdegree state: " << executor->degree << std::endl;
 
-    executor->degree = (executor->degree+360) % 360;
+    executor->degree = (executor->degree + 360) % 360;
 }
 
-TurnOp::TurnOp(Executor *executor, Variable *var) {
-}
+// TurnOp::TurnOp(Executor *executor, Variable *var) {
+// }
 
 ColorOp::ColorOp(Executor *executor, Pixel p) : Op(executor), pixel(p) {
 }
@@ -173,4 +174,20 @@ CallOp::CallOp(Executor *executor, std::string name, std::vector<Symbol> paraLis
 }
 
 CallOp::~CallOp() {
+}
+
+DefOp::DefOp(Executor *executor, std::string name, VariableWrapper vw) : name(name), varWrapper(vw) {
+}
+
+DefOp::~DefOp() {
+}
+
+void DefOp::exec() {
+    std::cout << "DEF " << name << " " << varWrapper.getValue() << std::endl;
+
+    if (Variable::getVariableByName(name) == Variable::noVar()) {
+        Variable *v = new Variable(name, varWrapper.getValue());
+    } else {
+        issueRuntimeError("Variable " + name + " is already defined");
+    }
 }

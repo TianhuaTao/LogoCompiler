@@ -20,6 +20,10 @@ inline int stringToInt(std::string s){
     return result;
 }
 
+inline void issueRuntimeError(std::string err) {
+    std::cout << err << std::endl;
+}
+
 #endif // UTILITY_MY_H
 
 

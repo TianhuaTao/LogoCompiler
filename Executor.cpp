@@ -20,8 +20,9 @@ void Executor::initNewBuffer(int width, int height) {
     buffer = new unsigned char[width * height * sizeof(Pixel)];
 }
 
-void Executor::turn(const Variable &v) {
-}
+// void Executor::turn(std::string varName) {
+
+// }
 
 void Executor::setBackground(int R, int G, int B) {
     Pixel *pixels = reinterpret_cast<Pixel *>(buffer);
@@ -37,6 +38,9 @@ void Executor::setPenPosition(int x, int y) {
 }
 
 void Executor::def(std::string name, int value) {
+    Op *op;
+    op = new DefOp(this, name, value);
+    current_ops->push_back(op);
 }
 
 void Executor::add(Variable &v, int value) {
@@ -46,7 +50,11 @@ void Executor::add(Variable &v, int value) {
     current_ops->push_back(op);
 }
 
-void Executor::move(const Variable &v) {
+void Executor::move(std::string varName) {
+    Op *op;
+    // std::cout <<"debug: "<< v.getValue() << std::endl;
+    op = new MoveOp(this, varName);
+    current_ops->push_back(op);
 }
 
 void Executor::move(int step) {
@@ -65,6 +73,12 @@ void Executor::turn(int degree) {
 
     Op *op;
     op = new TurnOp(this, degree);
+    current_ops->push_back(op);
+}
+void Executor::turn(VariableWrapper vw) {
+
+    Op *op;
+    op = new TurnOp(this, vw);
     current_ops->push_back(op);
 }
 

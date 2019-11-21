@@ -2,6 +2,7 @@
 #include "symbols.h"
 #include "utility.h"
 #include <sstream>
+#include "Variable.h"
 Interpreter::Interpreter() {
 }
 
@@ -128,17 +129,17 @@ void Interpreter::processSymbol(Symbol &symbol) {
         auto sym = nextSymbol();
         if (sym.getType()==INTCONST)
         {
-            executor.turn(sym.getValue());
+            executor.turn(VariableWrapper(sym.getValue()));
         }
         else
         {
             assertSymbolType(sym, IDENTIFIER);
-            Variable &v = Variable::getVariableByName(sym.getName());
-            if (v == Variable::noVar())
-            {
-                issueError("Variable not found: " + sym.getName());
-            }
-            executor.turn(v);
+            // Variable &v = Variable::getVariableByName(sym.getName());
+            // if (v == Variable::noVar())
+            // {
+            //     issueError("Variable not found: " + sym.getName());
+            // }
+            executor.turn(VariableWrapper(sym.getName()));
         }
     }
     else if (symbol.getType() == MOVE)
@@ -151,12 +152,9 @@ void Interpreter::processSymbol(Symbol &symbol) {
         else
         {
             assertSymbolType(sym, IDENTIFIER);
-            Variable &v = Variable::getVariableByName(sym.getName());
-            if (v == Variable::noVar())
-            {
-                issueError("Variable not found: " + sym.getName());
-            }
-            executor.move(v);
+            // Variable &v = Variable::getVariableByName(sym.getName());
+            // std::cout << "debug: " << v.getValue() << std::endl;
+            executor.move(sym.getName());
         }
     }
 
@@ -199,6 +197,11 @@ void Interpreter::processSymbol(Symbol &symbol) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getParaList();
+    } else if (symbol.getType() == DEF){
+        auto varName = nextSymbol();
+        assertSymbolType(varName, IDENTIFIER);
+        int init_value = nextInt();
+        executor.def(varName.getName(), init_value);
     }
 }
 std::vector<Symbol> Interpreter::getParaList() {

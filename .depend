@@ -1,12 +1,13 @@
-main.o: main.cpp Interpreter.h Executor.h Pixel.h Variable.h Op.h \
+main.o: main.cpp Interpreter.h Executor.h Op.h Pixel.h Variable.h \
   symbols.h OpsQueue.h
 FileWriter.o: FileWriter.cpp FileWriter.h Pixel.h
-Executor.o: Executor.cpp Executor.h Pixel.h Variable.h Op.h symbols.h \
+Executor.o: Executor.cpp Executor.h Op.h Pixel.h Variable.h symbols.h \
   OpsQueue.h FileWriter.h
-Op.o: Op.cpp Op.h Variable.h Pixel.h symbols.h Executor.h OpsQueue.h
+Op.o: Op.cpp Op.h Pixel.h Variable.h symbols.h Executor.h OpsQueue.h \
+  utility.h
 lex.yy.o: lex.yy.cpp symbols.h
-Interpreter.o: Interpreter.cpp Interpreter.h Executor.h Pixel.h \
-  Variable.h Op.h symbols.h OpsQueue.h utility.h
+Interpreter.o: Interpreter.cpp Interpreter.h Executor.h Op.h Pixel.h \
+  Variable.h symbols.h OpsQueue.h utility.h
 symbols.o: symbols.cpp symbols.h utility.h
 OpsQueue.o: OpsQueue.cpp OpsQueue.h
-Variable.o: Variable.cpp Variable.h
+Variable.o: Variable.cpp Variable.h utility.h

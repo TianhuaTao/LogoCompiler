@@ -1,12 +1,14 @@
+#if !defined(EXECUTOR_H)
+#define EXECUTOR_H
+
+#include "Op.h"
+#include "OpsQueue.h"
 #include "Pixel.h"
 #include "Variable.h"
 #include <cmath>
-#include<vector>
-#include "Op.h"
-#include "OpsQueue.h"
+#include <vector>
 const double PI = 3.14159265359;
-class Executor
-{
+class Executor {
     friend class MoveOp;
     friend class TurnOp;
     friend class AddOp;
@@ -20,7 +22,7 @@ private:
     unsigned char *buffer = nullptr;
     double logical_pen_x;
     double logical_pen_y;
-    int degree = 90;    // range [0,359]
+    int degree = 90; // range [0,359]
     size_t pc;
     std::vector<OpsQueue *> allOps;
     OpsQueue *current_OpsQueue;
@@ -28,7 +30,7 @@ private:
 
     bool clocked = false;
     Pixel penColor;
-    Pixel& getBufferPixel(int x, int y);
+    Pixel &getBufferPixel(int x, int y);
     int width;
     int height;
     Pixel _noPixel; // a special pixel, all invalid pixels point to this
@@ -41,15 +43,19 @@ public:
     void setPenPosition(int x, int y);
     void def(std::string name, int value);
     void add(Variable &v, int value);
-    void move(const Variable &v);
+    void move(std::string varName);
     void move(int step);
     void cloak();
     void turn(int angle);
-    void turn(const Variable &v);
+    void turn(std::string varName);
+    void turn(VariableWrapper vw);
     void setPenColor(int r, int g, int b);
     void loop(int value);
     void endLoop();
     void startFuncDef(std::string name, int argc);
-    void drawPixel(int x,int y);
+    void drawPixel(int x, int y);
     void writeFile();
 };
+
+#endif // EXECUTOR_H
+
