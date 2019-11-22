@@ -23,7 +23,7 @@ size_t FileWriter::WriteBMP(std::string filename, const unsigned char *data, int
             y = (height - 1) - j;
             unsigned char r = pixels[j * width + i].r;
             unsigned char g = pixels[j * width + i].g;
-            unsigned char b = pixels[j * width + i].r;
+            unsigned char b = pixels[j * width + i].b;
 
             img[(x + y * width) * 3 + 2] = r;
             img[(x + y * width) * 3 + 1] = g;

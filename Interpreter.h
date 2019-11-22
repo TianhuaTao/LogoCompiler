@@ -12,6 +12,7 @@ private:
     // std::queue<std::string> lexQueue;
     Executor executor;
     int nextInt();
+    VariableWrapper getNextVariableWrapper();
     Symbol nextSymbol();
     void processSymbol(Symbol &symbol);
     std::vector<VariableWrapper> getParaList();

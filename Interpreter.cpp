@@ -39,7 +39,9 @@ void Interpreter::compile(const char *filename) {
 
     assertSymbolType(lexQueue.front(), ATBACKGROUND);
     lexQueue.pop(); // @BACKGROUND
-    int r, g, b;
+    int r;
+    int g;
+    int b;
     r = nextInt();
     g = nextInt();
     b = nextInt();
@@ -71,6 +73,20 @@ int Interpreter::nextInt() {
     result = lexQueue.front().getValue();
     lexQueue.pop();
     return result;
+}
+
+VariableWrapper Interpreter::getNextVariableWrapper() {
+    if (lexQueue.empty()) {
+        issueError("Expecting a symbol");
+    }
+    auto sym = nextSymbol();
+    if (sym.getType() == INTCONST) {
+        return VariableWrapper(sym.getValue());
+    } else {
+        assertSymbolType(sym, IDENTIFIER);
+       return VariableWrapper(sym.getName());
+    }
+    
 }
 
 Symbol Interpreter::nextSymbol() {
@@ -146,10 +162,12 @@ void Interpreter::processSymbol(Symbol &symbol) {
         
     } else if (symbol.getType() == COLOR) {
         // std::cout << "symbol:COLOR" << std::endl;
-        int r, g, b;
-        r = nextInt();
-        g = nextInt();
-        b = nextInt();
+        VariableWrapper r(0);
+        VariableWrapper g(0);
+        VariableWrapper b(0);
+        r = getNextVariableWrapper();
+        g = getNextVariableWrapper();
+        b = getNextVariableWrapper();
         executor.setPenColor(r, g, b);
     } else if (symbol.getType() == CLOAK) {
         executor.cloak();

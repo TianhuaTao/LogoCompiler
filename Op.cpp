@@ -63,7 +63,7 @@ EndLoopOp::~EndLoopOp() {
 }
 
 void EndLoopOp::exec() {
-    std::cout << "ONE loop finished" << std::endl;
+    std::cout << "ONE loop finished" <<std::endl;
 
     size_t maybe_pc = executor->pc;
     bool isStartLoop = false;
@@ -74,10 +74,10 @@ void EndLoopOp::exec() {
         op = (*ops)[maybe_pc];
         isStartLoop = (op == start);
     }
-    std::cout << "\tfound corresponding START LOOP" << std::endl;
+    // std::cout << "\tfound corresponding START LOOP" << std::endl;
 
     StartLoopOp *sop = dynamic_cast<StartLoopOp *>(op);
-    std::cout << "\t" << sop->getLoopRemain() << " loops left" << std::endl;
+    // std::cout << "\t" << sop->getLoopRemain() << " loops left" << std::endl;
 
     if (sop->getLoopRemain() > 0) {
         sop->minusOneLoop();
@@ -94,7 +94,7 @@ MoveOp::~MoveOp() {
 }
 
 void MoveOp::exec() {
-    std::cout << "debug: in MoveOp::exec()" << std::endl;
+    // std::cout << "debug: in MoveOp::exec()" << std::endl;
 
     int l;
     // if (var) {
@@ -165,7 +165,7 @@ void ColorOp::exec() {
     Pixel pixel(r.getValue(), g.getValue(), b.getValue(), 1);
     executor->penColor = pixel;
     executor->clocked = false;
-    std::cout << "ColorOp::exec() done" << std::endl;
+    // std::cout << "ColorOp::exec() done" << std::endl;
 }
 
 AddOp::AddOp(Executor *executor, VariableWrapper vw, VariableWrapper value) : Op(executor), var(vw), value(value) {

@@ -6,5 +6,5 @@ CXX_FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/Ma
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/sam/Desktop/LogoCompiler/. 
+CXX_INCLUDES = -I/Users/sam/Documents/GitHub/LogoCompiler/. 
 
