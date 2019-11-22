@@ -25,9 +25,9 @@ private:
     int degree = 90; // range [0,359]
     size_t pc;
     std::vector<OpsQueue *> allOps;
-    OpsQueue *current_OpsQueue;
-    std::vector<Op *> *current_ops;
-
+    OpsQueue *current_OpsQueue;     // change together
+    std::vector<Op *> *current_ops; // change together
+    // std::stack<> callStack;
     bool clocked = false;
     Pixel penColor;
     Pixel &getBufferPixel(int x, int y);
@@ -57,6 +57,7 @@ public:
     void loop(int value);
     void endLoop();
     void startFuncDef(std::string name, int argc);
+    void endFuncDef();
     void drawPixel(int x, int y);
     void writeFile();
 };

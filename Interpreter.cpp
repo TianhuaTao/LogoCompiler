@@ -123,7 +123,7 @@ void Interpreter::processSymbol(Symbol &symbol) {
     else if (symbol.getType() == ENDLOOP) {
         executor.endLoop();
     } else if (symbol.getType() == ENDFUNC) {
-        
+        executor.endFuncDef();
     }
 
     else if (symbol.getType() == ADD) {
@@ -174,16 +174,22 @@ void Interpreter::processSymbol(Symbol &symbol) {
         executor.def(varName.getName(), init_value);
     }
 }
-std::vector<Symbol> Interpreter::getParaList() {
-    std::vector<Symbol> result;
+std::vector<VariableWrapper> Interpreter::getParaList() {
+    std::vector<VariableWrapper> result;
     auto symbol = nextSymbol();
     assertSymbolType(symbol, LPAR);
     symbol = nextSymbol();
     while (symbol.getType() !=RPAR)
     {
-        if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
-            result.push_back(symbol);
+        if(symbol.getType()== IDENTIFIER ){
+            result.push_back(VariableWrapper(symbol.getName()));
+        } else if (symbol.getType() == INTCONST) {
+            result.push_back(VariableWrapper(symbol.getValue()));
         }
+        
+        // if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
+        //     result.push_back(symbol);
+        // }
         symbol = nextSymbol();
         if (symbol.getType() == COMMA){
             symbol = nextSymbol();
@@ -191,14 +197,28 @@ std::vector<Symbol> Interpreter::getParaList() {
     }
     return result;
 }
-std::vector<Symbol> Interpreter::getIdentifierList() {
-    auto list = getParaList();
-    for (auto it = list.begin(); it != list.end();it++){
-        if(it->getType()!= IDENTIFIER){
-            issueError("Symbol " + it->getName() + " is not a valid identifier");
+std::vector<VariableWrapper> Interpreter::getIdentifierList() {
+    std::vector<VariableWrapper> result;
+    auto symbol = nextSymbol();
+    assertSymbolType(symbol, LPAR);
+    symbol = nextSymbol();
+    while (symbol.getType() != RPAR) {
+        if (symbol.getType() == IDENTIFIER) {
+            result.push_back(VariableWrapper(symbol.getName()));
+        } else if (symbol.getType() == INTCONST) {
+            issueError("unexpected int const here");
+            // result.push_back(VariableWrapper(symbol.getValue()));
+        }
+
+        // if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
+        //     result.push_back(symbol);
+        // }
+        symbol = nextSymbol();
+        if (symbol.getType() == COMMA) {
+            symbol = nextSymbol();
         }
     }
-    return list;
+    return result;
 }
 
 void Interpreter::issueError(std::string err) {

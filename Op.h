@@ -112,9 +112,13 @@ public:
 
 class CallOp : public Op {
 private:
+    std::string name;
+    std::vector<VariableWrapper> paraList;
+
 public:
-    CallOp(Executor *executor, std::string name, std::vector<Symbol> paraList);
+    CallOp(Executor *executor, std::string name, std::vector<VariableWrapper> paraList) : name(name), paraList(paraList) {}
     ~CallOp();
+    virtual void exec();
 };
 class DefOp : public Op {
 private:

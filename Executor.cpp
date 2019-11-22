@@ -126,8 +126,16 @@ void Executor::endLoop() {
 }
 
 void Executor::startFuncDef(std::string name, int argc) {
+    OpsQueue *q = new OpsQueue(name);
+    current_ops = q->getOps();
+    allOps.push_back(q);
 }
 
+void Executor::endFuncDef() {
+    // set current_ops to 0global
+    current_OpsQueue = allOps[0];
+    current_ops = current_OpsQueue->getOps();
+}
 void Executor::run() {
     std::cout << current_ops->size() << " ops to run" << std::endl;
 
