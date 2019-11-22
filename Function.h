@@ -1,21 +1,34 @@
+#if !defined(FUNCTION_H)
+#define FUNCTION_H
+
 #include "utility.h"
-class Function
-{
+#include <string>
+#include <vector>
+#include "VariableWrapper.h"
+class Op;
+class Function {
 private:
     std::string _name;
     int _argc;
-
+    std::vector<Op *> _ops;
+    std::vector<VariableWrapper> paraList;
 public:
-    Function(std::string name, int argc);
+    Function(std::string name, std::vector<VariableWrapper> paraList);
     ~Function();
-    
-    static Function &getFunctionByName(std::string name);
+    std::vector<Op *> *getOps() {
+        return &_ops;
+    }
+    std::string getName() const {
+        return _name;
+    }
+    std::vector<VariableWrapper>& getParaList(){
+        return paraList;
+    }
+    // static Function &getFunctionByName(std::string name);
 };
 
-Function::Function(std::string name, int argc):_name(name), _argc(argc)
-{
-}
 
-Function::~Function()
-{
-}
+
+
+#endif // FUNCTION_H
+

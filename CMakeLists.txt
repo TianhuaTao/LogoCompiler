@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(.)
 
 add_executable(LogoCompiler
-        tests/test1.logo
+        VariableWrapper.cpp
+        Function.cpp
+        StackFrame.cpp
         Executor.cpp
         FileWriter.cpp
         Interpreter.cpp

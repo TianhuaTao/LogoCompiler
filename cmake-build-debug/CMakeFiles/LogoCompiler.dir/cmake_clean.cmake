@@ -1,9 +1,12 @@
 file(REMOVE_RECURSE
   "CMakeFiles/LogoCompiler.dir/Executor.cpp.o"
   "CMakeFiles/LogoCompiler.dir/FileWriter.cpp.o"
+  "CMakeFiles/LogoCompiler.dir/Function.cpp.o"
   "CMakeFiles/LogoCompiler.dir/Interpreter.cpp.o"
   "CMakeFiles/LogoCompiler.dir/Op.cpp.o"
+  "CMakeFiles/LogoCompiler.dir/StackFrame.cpp.o"
   "CMakeFiles/LogoCompiler.dir/Variable.cpp.o"
+  "CMakeFiles/LogoCompiler.dir/VariableWrapper.cpp.o"
   "CMakeFiles/LogoCompiler.dir/lex.yy.cpp.o"
   "CMakeFiles/LogoCompiler.dir/main.cpp.o"
   "CMakeFiles/LogoCompiler.dir/symbols.cpp.o"

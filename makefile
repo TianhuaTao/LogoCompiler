@@ -5,7 +5,7 @@ CPPFLAGS=-g --std=c++11
 LDFLAGS=-g --std=c++11 
 LDLIBS=
 
-SRCS=main.cpp FileWriter.cpp Executor.cpp Op.cpp lex.yy.cpp Interpreter.cpp symbols.cpp OpsQueue.cpp Variable.cpp
+SRCS=main.cpp FileWriter.cpp Executor.cpp Op.cpp lex.yy.cpp Interpreter.cpp symbols.cpp OpsQueue.cpp Variable.cpp VariableWrapper.cpp Function.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: LogoCompiler

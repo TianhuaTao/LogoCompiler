@@ -2,15 +2,21 @@
 #include "FileWriter.h"
 #include <iostream>
 #include "OpsQueue.h"
-Executor::Executor()
-{
+#include "Function.h"
+Executor *Executor::globalExe = nullptr;
+Executor::Executor() {
     penColor = Pixel(0, 0, 0, 1);
-    OpsQueue *globalOps = new OpsQueue("0global");
-    callStack.push_back(StackFrame(globalOps, 0, std::vector<Variable>()));
-    current_OpsQueue = globalOps;
-    current_ops = current_OpsQueue->getOps();
+    // OpsQueue *globalOps = new OpsQueue("0global");
+    Function *globalFunc = new Function("0global",std::vector<VariableWrapper>());
 
-    allOps.push_back(globalOps);
+    callStack.push_back(StackFrame(globalFunc, 0, std::vector<Variable>()));
+    // current_OpsQueue = globalOps;
+    current_function = globalFunc;
+    current_ops = current_function->getOps();
+
+    allFunctions.push_back(globalFunc);
+    globalExe = this;
+    pc = 0;
 }
 
 Executor::~Executor()
@@ -46,13 +52,17 @@ Variable &Executor::getVariableByName(std::string name)
     }
 
     if (v) {
-        std::cout << "found" << std::endl;
+//        std::cout << "found" << std::endl;
         return *v;
     } else {
-        std::cout << "not found" << std::endl;
+//        std::cout << "not found" << std::endl;
         return Variable::noVar();
     }
 }
+Variable &Executor::getVariableByNameStatic(std::string name){
+    return globalExe->getVariableByName(name);
+}
+
 void Executor::initNewBuffer(int width, int height)
 {
     delete buffer;
@@ -185,32 +195,58 @@ void Executor::endLoop()
     }
 }
 
-void Executor::startFuncDef(std::string name, int argc)
-{
-    OpsQueue *q = new OpsQueue(name);
-    current_ops = q->getOps();
-    allOps.push_back(q);
+void Executor::startFuncDef(std::string name, std::vector<VariableWrapper> list) {
+    Function *f = new Function(name, list);
+    current_function = f;
+    current_ops = f->getOps();
+    allFunctions.push_back(f);
+    // OpsQueue *q = new OpsQueue(name);
+    // current_ops = q->getOps();
+    // allOps.push_back(q);
 }
 
 void Executor::endFuncDef()
 {
     // set current_ops to 0global
-    current_OpsQueue = allOps[0];
-    current_ops = current_OpsQueue->getOps();
+    current_function = allFunctions[0];
+    current_ops = current_function->getOps();
+
 }
 void Executor::run()
 {
-    std::cout << current_ops->size() << " ops to run" << std::endl;
 
-    size_t ops_cnt = current_ops->size();
-    pc = 0;
-    while (pc != current_ops->size())
-    {
-        std::cout << "pc[" << pc << "]: ";
+    while (!callStack.empty()){
+        current_function = callStack[callStack.size()-1].function;
+        current_ops  =current_function->getOps();
+//        StackFrame& frame =callStack[callStack.size()-1];
+//        size_t ops_cnt = current_ops->size();
+        std::cout <<"Execute "<< current_function->getName() <<" from pc["<<pc<<"]" << std::endl;
+        while (pc < current_ops->size())
+        {
+            std::cout << "pc[" << pc << "]: ";
 
-        (*current_ops)[pc]->exec();
-        pc++;
+            (*current_ops)[pc]->exec();
+            pc++;
+        }
+        // frame complete
+        std::cout << "return from " << current_function->getName() << std::endl;
+
+        pc= callStack[callStack.size()-1].ret_pc+1;
+        callStack.pop_back();
     }
+
+//    std::cout << current_ops->size() << " ops to run" << std::endl;
+//    std::cout << "Execute stack frame " << " ops to run" << std::endl;
+//
+//    size_t ops_cnt = current_ops->size();
+//    pc = 0;
+//    while (pc != current_ops->size())
+//    {
+//        std::cout << "pc[" << pc << "]: ";
+//
+//        (*current_ops)[pc]->exec();
+//        pc++;
+//    }
 }
 void Executor::drawPixel(int x, int y)
 {
@@ -247,6 +283,12 @@ void Executor::writeFile()
     {
         std::cerr << "cannot write to file " << filename << std::endl;
     }
+}
+
+void Executor::call(std::string name, std::vector<VariableWrapper> paraList) {
+            Op *op;
+    op = new CallOp(this, name, paraList);
+    current_ops->push_back(op);
 }
 
 StackFrame::~StackFrame()

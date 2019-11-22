@@ -6,7 +6,7 @@ Variable noVarInstance("noVar", 0);
 
 Variable::Variable(std::string name, int initValue) : _value(initValue), _name(name), id(nextID++) {
     // variableSet.push_back(this);
-    std::cout << "debug: new Var: " << _name << " value=" << _value << std::endl;
+//    std::cout << "debug: new Var: " << _name << " value=" << _value << std::endl;
 }
 
 Variable::~Variable() {

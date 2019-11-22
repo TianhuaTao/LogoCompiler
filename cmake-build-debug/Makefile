@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/sam/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6817.32/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = "/Users/sam/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/CLion.app/Contents/bin/cmake/mac/bin/cmake"
 
 # The command to remove a file.
-RM = /home/sam/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6817.32/bin/cmake/linux/bin/cmake -E remove -f
+RM = "/Users/sam/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/CLion.app/Contents/bin/cmake/mac/bin/cmake" -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /linux_data/LogoCompiler
+CMAKE_SOURCE_DIR = /Users/sam/Desktop/LogoCompiler
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /linux_data/LogoCompiler/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/sam/Desktop/LogoCompiler/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /linux_data/LogoCompiler/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/sam/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6817.32/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	"/Users/sam/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/CLion.app/Contents/bin/cmake/mac/bin/cmake" -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/sam/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6817.32/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	"/Users/sam/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/192.7142.39/CLion.app/Contents/bin/cmake/mac/bin/cmake" -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /linux_data/LogoCompiler/cmake-build-debug/CMakeFiles /linux_data/LogoCompiler/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles /Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /linux_data/LogoCompiler/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -177,6 +177,33 @@ FileWriter.cpp.s:
 	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/FileWriter.cpp.s
 .PHONY : FileWriter.cpp.s
 
+Function.o: Function.cpp.o
+
+.PHONY : Function.o
+
+# target to build an object file
+Function.cpp.o:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/Function.cpp.o
+.PHONY : Function.cpp.o
+
+Function.i: Function.cpp.i
+
+.PHONY : Function.i
+
+# target to preprocess a source file
+Function.cpp.i:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/Function.cpp.i
+.PHONY : Function.cpp.i
+
+Function.s: Function.cpp.s
+
+.PHONY : Function.s
+
+# target to generate assembly for a file
+Function.cpp.s:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/Function.cpp.s
+.PHONY : Function.cpp.s
+
 Interpreter.o: Interpreter.cpp.o
 
 .PHONY : Interpreter.o
@@ -231,6 +258,33 @@ Op.cpp.s:
 	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/Op.cpp.s
 .PHONY : Op.cpp.s
 
+StackFrame.o: StackFrame.cpp.o
+
+.PHONY : StackFrame.o
+
+# target to build an object file
+StackFrame.cpp.o:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/StackFrame.cpp.o
+.PHONY : StackFrame.cpp.o
+
+StackFrame.i: StackFrame.cpp.i
+
+.PHONY : StackFrame.i
+
+# target to preprocess a source file
+StackFrame.cpp.i:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/StackFrame.cpp.i
+.PHONY : StackFrame.cpp.i
+
+StackFrame.s: StackFrame.cpp.s
+
+.PHONY : StackFrame.s
+
+# target to generate assembly for a file
+StackFrame.cpp.s:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/StackFrame.cpp.s
+.PHONY : StackFrame.cpp.s
+
 Variable.o: Variable.cpp.o
 
 .PHONY : Variable.o
@@ -257,6 +311,33 @@ Variable.s: Variable.cpp.s
 Variable.cpp.s:
 	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/Variable.cpp.s
 .PHONY : Variable.cpp.s
+
+VariableWrapper.o: VariableWrapper.cpp.o
+
+.PHONY : VariableWrapper.o
+
+# target to build an object file
+VariableWrapper.cpp.o:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/VariableWrapper.cpp.o
+.PHONY : VariableWrapper.cpp.o
+
+VariableWrapper.i: VariableWrapper.cpp.i
+
+.PHONY : VariableWrapper.i
+
+# target to preprocess a source file
+VariableWrapper.cpp.i:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/VariableWrapper.cpp.i
+.PHONY : VariableWrapper.cpp.i
+
+VariableWrapper.s: VariableWrapper.cpp.s
+
+.PHONY : VariableWrapper.s
+
+# target to generate assembly for a file
+VariableWrapper.cpp.s:
+	$(MAKE) -f CMakeFiles/LogoCompiler.dir/build.make CMakeFiles/LogoCompiler.dir/VariableWrapper.cpp.s
+.PHONY : VariableWrapper.cpp.s
 
 lex.yy.o: lex.yy.cpp.o
 
@@ -346,23 +427,32 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... LogoCompiler"
 	@echo "... edit_cache"
+	@echo "... LogoCompiler"
 	@echo "... Executor.o"
 	@echo "... Executor.i"
 	@echo "... Executor.s"
 	@echo "... FileWriter.o"
 	@echo "... FileWriter.i"
 	@echo "... FileWriter.s"
+	@echo "... Function.o"
+	@echo "... Function.i"
+	@echo "... Function.s"
 	@echo "... Interpreter.o"
 	@echo "... Interpreter.i"
 	@echo "... Interpreter.s"
 	@echo "... Op.o"
 	@echo "... Op.i"
 	@echo "... Op.s"
+	@echo "... StackFrame.o"
+	@echo "... StackFrame.i"
+	@echo "... StackFrame.s"
 	@echo "... Variable.o"
 	@echo "... Variable.i"
 	@echo "... Variable.s"
+	@echo "... VariableWrapper.o"
+	@echo "... VariableWrapper.i"
+	@echo "... VariableWrapper.s"
 	@echo "... lex.yy.o"
 	@echo "... lex.yy.i"
 	@echo "... lex.yy.s"

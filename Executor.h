@@ -9,6 +9,7 @@
 #include <vector>
 #include "StackFrame.h"
 class OpsQueue;
+class Function;
 const double PI = 3.14159265359;
 class Executor
 {
@@ -21,16 +22,19 @@ class Executor
     friend class StartLoopOp;
     friend class cloakOp;
     friend class DefOp;
-
+    friend class CallOp;
 
 private:
+    static Executor *globalExe;
     unsigned char *buffer = nullptr;
     double logical_pen_x;
     double logical_pen_y;
     int degree = 90; // range [0,359]
     size_t pc;
-    std::vector<OpsQueue *> allOps;
-    OpsQueue *current_OpsQueue;     // change together
+    // std::vector<OpsQueue *> allOps;
+    std::vector<Function *> allFunctions;
+    // OpsQueue *current_OpsQueue;     // change together
+    Function *current_function;
     std::vector<Op *> *current_ops; // change together
     std::vector<StackFrame> callStack;
     bool clocked = false;
@@ -63,10 +67,11 @@ public:
 
     void loop(int value);
     void endLoop();
-    void startFuncDef(std::string name, int argc);
+    void startFuncDef(std::string name, std::vector<VariableWrapper> list);
     void endFuncDef();
     void drawPixel(int x, int y);
     void writeFile();
+    void call(std::string name, std::vector<VariableWrapper> paraList);
 };
 
 #endif // EXECUTOR_H

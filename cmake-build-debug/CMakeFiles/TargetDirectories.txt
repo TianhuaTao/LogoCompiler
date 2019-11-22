@@ -1,3 +1,3 @@
-/linux_data/LogoCompiler/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/linux_data/LogoCompiler/cmake-build-debug/CMakeFiles/LogoCompiler.dir
-/linux_data/LogoCompiler/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/sam/Desktop/LogoCompiler/cmake-build-debug/CMakeFiles/LogoCompiler.dir

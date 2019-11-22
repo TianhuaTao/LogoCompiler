@@ -160,13 +160,14 @@ void Interpreter::processSymbol(Symbol &symbol) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getIdentifierList();
-        executor.startFuncDef(funcSymbol.getName(), list.size());
+        executor.startFuncDef(funcSymbol.getName(), list);
         }
 
     else if (symbol.getType() == CALL) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getParaList();
+        executor.call(funcSymbol.getName(), list);
     } else if (symbol.getType() == DEF){
         auto varName = nextSymbol();
         assertSymbolType(varName, IDENTIFIER);
