@@ -4,6 +4,7 @@
 #include "Pixel.h"
 #include "Variable.h"
 #include "symbols.h"
+#include "VariableWrapper.h"
 class Executor;
 class Op {
 private:

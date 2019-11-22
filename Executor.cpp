@@ -1,78 +1,128 @@
 #include "Executor.h"
 #include "FileWriter.h"
 #include <iostream>
-Executor::Executor() {
+#include "OpsQueue.h"
+Executor::Executor()
+{
     penColor = Pixel(0, 0, 0, 1);
     OpsQueue *globalOps = new OpsQueue("0global");
+    callStack.push_back(StackFrame(globalOps, 0, std::vector<Variable>()));
     current_OpsQueue = globalOps;
     current_ops = current_OpsQueue->getOps();
 
     allOps.push_back(globalOps);
 }
 
-Executor::~Executor() {
+Executor::~Executor()
+{
 }
+Variable &Executor::getVariableByName(std::string name)
+{
+    // std::cout << "debug: name=" << name << ", result=";
 
-void Executor::initNewBuffer(int width, int height) {
+    Variable *v = nullptr;
+    bool found = false;
+    // check local variables in every stack frame
+    for (auto it = callStack.rbegin(); it != callStack.rend(); it++)
+    {
+        if (found)
+            break;
+        std::vector<Variable> &l_vars = it->localVariables;
+        for (auto it2 = l_vars.begin(); it2 != l_vars.end(); it2++)
+        {
+            if (it2->getName() == name)
+            {
+                v = &(*it2);
+                found = true;
+                break;
+            }
+        }
+
+        // std::cout << "**********name" << (*it)->getName() << std::endl;
+        // if ((*it)->getName() == name) {
+        //     v = *it;
+        //     break;
+        // }
+    }
+
+    if (v) {
+        std::cout << "found" << std::endl;
+        return *v;
+    } else {
+        std::cout << "not found" << std::endl;
+        return Variable::noVar();
+    }
+}
+void Executor::initNewBuffer(int width, int height)
+{
     delete buffer;
     this->width = width;
     this->height = height;
     buffer = new unsigned char[width * height * sizeof(Pixel)];
 }
 
-
-void Executor::setBackground(int R, int G, int B) {
+void Executor::setBackground(int R, int G, int B)
+{
     Pixel *pixels = reinterpret_cast<Pixel *>(buffer);
     Pixel fill(R, G, B, 1);
-    for (size_t i = 0; i < width * height; i++) {
+    for (size_t i = 0; i < width * height; i++)
+    {
         pixels[i] = fill;
     }
 }
 
-void Executor::setPenPosition(int x, int y) {
+void Executor::setPenPosition(int x, int y)
+{
     logical_pen_x = x;
     logical_pen_y = y;
 }
 
-void Executor::def(std::string name, int value) {
+void Executor::def(std::string name, int value)
+{
     Op *op;
     op = new DefOp(this, name, value);
     current_ops->push_back(op);
 }
 
-void Executor::add(VariableWrapper vw, VariableWrapper value) {
+void Executor::add(VariableWrapper vw, VariableWrapper value)
+{
 
     Op *op;
     op = new AddOp(this, vw, value);
     current_ops->push_back(op);
 }
 
-void Executor::move(std::string varName) {
+void Executor::move(std::string varName)
+{
     Op *op;
     // std::cout <<"debug: "<< v.getValue() << std::endl;
     op = new MoveOp(this, varName);
     current_ops->push_back(op);
 }
 
-void Executor::move(int step) {
+void Executor::move(int step)
+{
     Op *op;
     op = new MoveOp(this, step);
     current_ops->push_back(op);
 }
 
-void Executor::cloak() {
+void Executor::cloak()
+{
     Op *op;
     op = new cloakOp(this);
     current_ops->push_back(op);
 }
 
-void Executor::turn(int degree) {
+void Executor::turn(int degree)
+{
 
     Op *op;
     op = new TurnOp(this, degree);
     current_ops->push_back(op);
 }
-void Executor::turn(VariableWrapper vw) {
+void Executor::turn(VariableWrapper vw)
+{
 
     Op *op;
     op = new TurnOp(this, vw);
@@ -86,92 +136,119 @@ void Executor::turn(VariableWrapper vw) {
 //     current_ops->push_back(op);
 // }
 
-void Executor::setPenColor(VariableWrapper r, VariableWrapper g, VariableWrapper b) {
+void Executor::setPenColor(VariableWrapper r, VariableWrapper g, VariableWrapper b)
+{
     // Pixel p(r, g, b, 1);
     Op *op;
-    op = new ColorOp(this, r,g,b);
+    op = new ColorOp(this, r, g, b);
     current_ops->push_back(op);
 }
 
-void Executor::loop(int value) {
+void Executor::loop(int value)
+{
     Op *op;
     op = new StartLoopOp(this, value);
     current_ops->push_back(op);
 }
 
-void Executor::endLoop() {
+void Executor::endLoop()
+{
     Op *op;
     Op *start = nullptr;
     int cnt = 1;
-    for (auto it = current_ops->rbegin(); it != current_ops->rend(); it++) {
-        if ((*it)->isEndLoopOp()) {
+    for (auto it = current_ops->rbegin(); it != current_ops->rend(); it++)
+    {
+        if ((*it)->isEndLoopOp())
+        {
             cnt++;
         }
-        if ((*it)->isStartLoopOp()) {
+        if ((*it)->isStartLoopOp())
+        {
             cnt--;
-            if (cnt == 0) {
+            if (cnt == 0)
+            {
                 start = *it;
-                
+
                 break;
             }
         }
     }
-    if (start) {
+    if (start)
+    {
         op = new EndLoopOp(this, start);
         dynamic_cast<StartLoopOp *>(start)->setEndLoopOp(op);
         current_ops->push_back(op);
-    } else {
+    }
+    else
+    {
         issueError("unexpected END LOOP");
     }
 }
 
-void Executor::startFuncDef(std::string name, int argc) {
+void Executor::startFuncDef(std::string name, int argc)
+{
     OpsQueue *q = new OpsQueue(name);
     current_ops = q->getOps();
     allOps.push_back(q);
 }
 
-void Executor::endFuncDef() {
+void Executor::endFuncDef()
+{
     // set current_ops to 0global
     current_OpsQueue = allOps[0];
     current_ops = current_OpsQueue->getOps();
 }
-void Executor::run() {
+void Executor::run()
+{
     std::cout << current_ops->size() << " ops to run" << std::endl;
 
     size_t ops_cnt = current_ops->size();
     pc = 0;
-    while (pc != current_ops->size()) {
+    while (pc != current_ops->size())
+    {
         std::cout << "pc[" << pc << "]: ";
 
         (*current_ops)[pc]->exec();
         pc++;
     }
 }
-void Executor::drawPixel(int x, int y) {
+void Executor::drawPixel(int x, int y)
+{
     getBufferPixel(x, y) = penColor;
 }
 
-Pixel &Executor::getBufferPixel(int x, int y) {
+Pixel &Executor::getBufferPixel(int x, int y)
+{
     // std::cout << "get buffer[" << x << "," << y << "]" << std::endl;
-    if (0 <= x && x < width && 0 <= y && y < height) {
+    if (0 <= x && x < width && 0 <= y && y < height)
+    {
         Pixel *p = reinterpret_cast<Pixel *>(buffer);
         p += y * this->width;
         p += x;
         return *p;
-    } else {
+    }
+    else
+    {
         return _noPixel;
     }
 }
 
-void Executor::writeFile() {
+void Executor::writeFile()
+{
     FileWriter writer;
     std::string filename = "output.bmp";
     auto sz = writer.WriteBMP(filename, this->buffer, width, height);
     std::cout << "write file return value: " << sz << std::endl;
-    if (sz) {
+    if (sz)
+    {
         std::cout << "write to file " << filename << std::endl;
-    } else {
+    }
+    else
+    {
         std::cerr << "cannot write to file " << filename << std::endl;
     }
+}
+
+StackFrame::~StackFrame()
+{
 }

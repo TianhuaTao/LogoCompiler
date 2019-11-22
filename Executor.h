@@ -2,13 +2,16 @@
 #define EXECUTOR_H
 
 #include "Op.h"
-#include "OpsQueue.h"
 #include "Pixel.h"
 #include "Variable.h"
 #include <cmath>
+#include <stack>
 #include <vector>
+#include "StackFrame.h"
+class OpsQueue;
 const double PI = 3.14159265359;
-class Executor {
+class Executor
+{
     friend class MoveOp;
     friend class TurnOp;
     friend class AddOp;
@@ -17,6 +20,8 @@ class Executor {
     friend class EndLoopOp;
     friend class StartLoopOp;
     friend class cloakOp;
+    friend class DefOp;
+
 
 private:
     unsigned char *buffer = nullptr;
@@ -27,7 +32,7 @@ private:
     std::vector<OpsQueue *> allOps;
     OpsQueue *current_OpsQueue;     // change together
     std::vector<Op *> *current_ops; // change together
-    // std::stack<> callStack;
+    std::vector<StackFrame> callStack;
     bool clocked = false;
     Pixel penColor;
     Pixel &getBufferPixel(int x, int y);
@@ -37,6 +42,8 @@ private:
 public:
     Executor();
     ~Executor();
+    static Variable &getVariableByNameStatic(std::string name);
+    Variable &getVariableByName(std::string name);
     void run();
     void initNewBuffer(int width, int height);
     void setBackground(int R, int G, int B);
@@ -63,4 +70,3 @@ public:
 };
 
 #endif // EXECUTOR_H
-
