@@ -34,6 +34,7 @@ WHITESPACE			 ([ \t]+)
 "END FUNC"			    {   keyword(ENDFUNC);			}
 "("                     {  keyword(LPAR);			}
 ")"                     {  keyword(RPAR);			}
+","                     {  keyword(COMMA);			}
 
 
 {SIGNED_INTEGER}			{  intConst(yytext);			}						    

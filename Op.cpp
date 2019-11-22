@@ -116,8 +116,8 @@ void MoveOp::exec() {
 
         // do some real drawing
         for (int i = 0; i < l; i++) {
-            int physical_pen_x = executor->logical_pen_x;
-            int physical_pen_y = executor->logical_pen_y;
+            int physical_pen_x = static_cast<int>(executor->logical_pen_x+0.5);
+            int physical_pen_y = static_cast<int>(executor->logical_pen_y + 0.5);
             executor->drawPixel(physical_pen_x, physical_pen_y);
             executor->logical_pen_x += 1 * cos(executor->degree * PI / 180.0);
             executor->logical_pen_y += 1 * sin(executor->degree * PI / 180.0);
