@@ -269,10 +269,9 @@ Pixel &Executor::getBufferPixel(int x, int y)
     }
 }
 
-void Executor::writeFile()
-{
+void Executor::writeFile(std::string filename) {
     FileWriter writer;
-    std::string filename = "output.bmp";
+    // std::string filename = "output.bmp";
     auto sz = writer.WriteBMP(filename, this->buffer, width, height);
     std::cout << "write file return value: " << sz << std::endl;
     if (sz)

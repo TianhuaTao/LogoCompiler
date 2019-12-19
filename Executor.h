@@ -70,7 +70,7 @@ public:
     void startFuncDef(std::string name, std::vector<VariableWrapper> list);
     void endFuncDef();
     void drawPixel(int x, int y);
-    void writeFile();
+    void writeFile(std::string filename);
     void call(std::string name, std::vector<VariableWrapper> paraList);
 };
 

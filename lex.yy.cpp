@@ -791,7 +791,7 @@ case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
 #line 18 "Lexer.l"
-{}
+{yylineno++;}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */

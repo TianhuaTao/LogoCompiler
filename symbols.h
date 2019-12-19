@@ -9,9 +9,9 @@ extern "C"
     int yylex(void);
     
 }
-
+const int SYMBOL_TYPE_START_NO = 30000;
 enum SymbolType {
-    MOVE = 30000,
+    MOVE = SYMBOL_TYPE_START_NO,
     TURN,
     LOOP,
     DEF,
@@ -33,14 +33,24 @@ enum SymbolType {
     COMMA
 };
 
-class Symbol
-{
+extern std::string symbolTypeName[];
+
+inline std::string getSymbolTypeName(int type){
+    return symbolTypeName[type - SYMBOL_TYPE_START_NO];
+}
+
+class Symbol {
 private:
     SymbolType type;
     int value;
     std::string name;
+    int lineno;
+
 public:
     const std::string &getName() const;
+    const int &getLineno() const{
+        return lineno;
+    }
 
 public:
     Symbol(SymbolType st);

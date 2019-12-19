@@ -22,8 +22,8 @@ public:
     Interpreter();
     ~Interpreter();
     void compile(const char *filename);
-    void issueError(std::string err);
-    void issueWarning(std::string err);
+    void issueError(std::string err,int lineno = -1);
+    void issueWarning(std::string err,int lineno = -1);
 };
 
 int assertSymbolType(Symbol &s, SymbolType type);

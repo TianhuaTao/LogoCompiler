@@ -22,6 +22,7 @@ inline int stringToInt(std::string s){
 
 inline void issueRuntimeError(std::string err) {
     std::cout << err << std::endl;
+    exit(1);
 }
 
 #endif // UTILITY_MY_H

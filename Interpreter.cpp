@@ -1,8 +1,8 @@
 #include "Interpreter.h"
+#include "Variable.h"
 #include "symbols.h"
 #include "utility.h"
 #include <sstream>
-#include "Variable.h"
 Interpreter::Interpreter() {
 }
 
@@ -13,7 +13,8 @@ int assertSymbolType(Symbol &s, SymbolType type) {
     if (s.getType() == type) {
         return 0;
     }
-    std::cerr << "Unexpected symbol: [type="<<s.getType()<<", name=" << s.getName()<<", value="<<s.getValue() <<"]"<< std::endl;
+    std::cerr << "Unexpected symbol at line " << s.getLineno() << ": [type=" << getSymbolTypeName(s.getType()) << ", name=\'" << s.getName() << "\', value=" << s.getValue() << "]" << std::endl;
+    exit(1);
     return -1;
 }
 void Interpreter::compile(const char *filename) {
@@ -27,7 +28,7 @@ void Interpreter::compile(const char *filename) {
     yylex();
     fclose(fp);
 
-    std::cout << "symbol queue size: " << lexQueue.size() << std::endl;
+    // std::cout << "symbol queue size: " << lexQueue.size() << std::endl;
 
     // header
     assertSymbolType(lexQueue.front(), ATSIZE);
@@ -61,7 +62,8 @@ void Interpreter::compile(const char *filename) {
     }
 
     executor.run();
-    executor.writeFile();
+    std::string outFileName = "output.bmp";
+    executor.writeFile(outFileName);
 }
 
 int Interpreter::nextInt() {
@@ -84,9 +86,8 @@ VariableWrapper Interpreter::getNextVariableWrapper() {
         return VariableWrapper(sym.getValue());
     } else {
         assertSymbolType(sym, IDENTIFIER);
-       return VariableWrapper(sym.getName());
+        return VariableWrapper(sym.getName());
     }
-    
 }
 
 Symbol Interpreter::nextSymbol() {
@@ -99,15 +100,11 @@ Symbol Interpreter::nextSymbol() {
 }
 
 void Interpreter::processSymbol(Symbol &symbol) {
-    if (symbol.getType() == TURN)
-    {
+    if (symbol.getType() == TURN) {
         auto sym = nextSymbol();
-        if (sym.getType()==INTCONST)
-        {
+        if (sym.getType() == INTCONST) {
             executor.turn(VariableWrapper(sym.getValue()));
-        }
-        else
-        {
+        } else {
             assertSymbolType(sym, IDENTIFIER);
             // Variable &v = Variable::getVariableByName(sym.getName());
             // if (v == Variable::noVar())
@@ -116,17 +113,12 @@ void Interpreter::processSymbol(Symbol &symbol) {
             // }
             executor.turn(VariableWrapper(sym.getName()));
         }
-    }
-    else if (symbol.getType() == MOVE)
-    {
+    } else if (symbol.getType() == MOVE) {
         auto sym = nextSymbol();
-        if (sym.getType()==INTCONST)
-        {
+        if (sym.getType() == INTCONST) {
             // Todo: use VariableWrapper
             executor.move(sym.getValue());
-        }
-        else
-        {
+        } else {
             assertSymbolType(sym, IDENTIFIER);
             // Variable &v = Variable::getVariableByName(sym.getName());
             // std::cout << "debug: " << v.getValue() << std::endl;
@@ -158,8 +150,7 @@ void Interpreter::processSymbol(Symbol &symbol) {
         // Variable&v =Variable::getVariableByName(sym.getName());
         // if(v == Variable::noVar()){
         // issueError("cannot find variable: "+ sym.getName());
-    
-        
+
     } else if (symbol.getType() == COLOR) {
         // std::cout << "symbol:COLOR" << std::endl;
         VariableWrapper r(0);
@@ -179,14 +170,14 @@ void Interpreter::processSymbol(Symbol &symbol) {
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getIdentifierList();
         executor.startFuncDef(funcSymbol.getName(), list);
-        }
+    }
 
     else if (symbol.getType() == CALL) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getParaList();
         executor.call(funcSymbol.getName(), list);
-    } else if (symbol.getType() == DEF){
+    } else if (symbol.getType() == DEF) {
         auto varName = nextSymbol();
         assertSymbolType(varName, IDENTIFIER);
         int init_value = nextInt();
@@ -198,19 +189,18 @@ std::vector<VariableWrapper> Interpreter::getParaList() {
     auto symbol = nextSymbol();
     assertSymbolType(symbol, LPAR);
     symbol = nextSymbol();
-    while (symbol.getType() !=RPAR)
-    {
-        if(symbol.getType()== IDENTIFIER ){
+    while (symbol.getType() != RPAR) {
+        if (symbol.getType() == IDENTIFIER) {
             result.push_back(VariableWrapper(symbol.getName()));
         } else if (symbol.getType() == INTCONST) {
             result.push_back(VariableWrapper(symbol.getValue()));
         }
-        
+
         // if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
         //     result.push_back(symbol);
         // }
         symbol = nextSymbol();
-        if (symbol.getType() == COMMA){
+        if (symbol.getType() == COMMA) {
             symbol = nextSymbol();
         }
     }
@@ -240,10 +230,20 @@ std::vector<VariableWrapper> Interpreter::getIdentifierList() {
     return result;
 }
 
-void Interpreter::issueError(std::string err) {
-    std::cerr << "Error: " << err << std::endl;
+void Interpreter::issueError(std::string err, int lineno) {
+    if (lineno == -1) {
+        std::cerr << "Error: " << err << std::endl;
+    } else {
+        std::cerr << "Error at " << lineno << ": " << err << std::endl;
+    }
+    exit(1);
 }
 
-void Interpreter::issueWarning(std::string err) {
-    std::cout << "Warning: " << err << std::endl;
+void Interpreter::issueWarning(std::string err, int lineno) {
+    if (lineno == -1) {
+        std::cerr << "Warning: " << err << std::endl;
+    }
+    else {
+        std::cout << "Warning at " << lineno << ": " << err << std::endl;
+    }
 }

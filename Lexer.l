@@ -15,7 +15,7 @@ WHITESPACE			 ([ \t]+)
 
 %% 
 {WHITESPACE}		{}
-{NEWLINE}			{}
+{NEWLINE}			{yylineno++;}
 {S_COMMENT}			{}
 
 "TURN"				    {  keyword(TURN);			}
