@@ -21,7 +21,7 @@ private:
 public:
     Interpreter();
     ~Interpreter();
-    void compile(const char *filename);
+    void compile(const char *filename, const char *outName = nullptr);
     void issueError(std::string err,int lineno = -1);
     void issueWarning(std::string err,int lineno = -1);
 };

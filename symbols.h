@@ -25,6 +25,8 @@ enum SymbolType {
     ATSIZE,
     ENDLOOP,
     ENDFUNC,
+    PENWIDTH,
+    FILL,
     LPAR,
     RPAR,
     IDENTIFIER,

@@ -3,6 +3,7 @@
 #include "symbols.h"
 #include "utility.h"
 #include <sstream>
+#include "Function.h"
 Interpreter::Interpreter() {
 }
 
@@ -17,7 +18,7 @@ int assertSymbolType(Symbol &s, SymbolType type) {
     exit(1);
     return -1;
 }
-void Interpreter::compile(const char *filename) {
+void Interpreter::compile(const char *filename, const char*outName) {
     FILE *fp = fopen(filename, "r");
     if (fp == nullptr) {
         std::cout << "Cannot open the file" << std::endl;
@@ -29,7 +30,9 @@ void Interpreter::compile(const char *filename) {
     fclose(fp);
 
     // std::cout << "symbol queue size: " << lexQueue.size() << std::endl;
-
+    if(lexQueue.empty()){
+        issueError("The file is empty");
+    }
     // header
     assertSymbolType(lexQueue.front(), ATSIZE);
     lexQueue.pop(); // @SIZE
@@ -60,7 +63,11 @@ void Interpreter::compile(const char *filename) {
         Symbol s = nextSymbol();
         processSymbol(s);
     }
+    // std::cout << executor.current_function->getName()<<std::endl;
+    if (executor.current_function->getName() != "0global") {
 
+        issueError("End of file in function definition, did you miss \"END FUNC\" for " + executor.current_function->getName() + "()?");
+    }
     executor.run();
     std::string outFileName = "output.bmp";
     executor.writeFile(outFileName);
@@ -132,6 +139,18 @@ void Interpreter::processSymbol(Symbol &symbol) {
         executor.endLoop();
     } else if (symbol.getType() == ENDFUNC) {
         executor.endFuncDef();
+    }else if(symbol.getType()== FILL){
+        executor.fill();
+    } else if (symbol.getType() == PENWIDTH) {
+        auto widthValue = nextSymbol();
+        VariableWrapper value(0);
+        if (widthValue.getType() == INTCONST) {
+            value = VariableWrapper(widthValue.getValue());
+        } else {
+            assertSymbolType(widthValue, IDENTIFIER);
+            value = VariableWrapper(widthValue.getName());
+        }
+        executor.setPenWidth(value);
     }
 
     else if (symbol.getType() == ADD) {
@@ -182,6 +201,10 @@ void Interpreter::processSymbol(Symbol &symbol) {
         assertSymbolType(varName, IDENTIFIER);
         int init_value = nextInt();
         executor.def(varName.getName(), init_value);
+    }else
+    {
+        std::string msg = " WTF R U TALKING ABOUT: " + symbol.getName() + " ???";
+        issueError(msg, symbol.getLineno());
     }
 }
 std::vector<VariableWrapper> Interpreter::getParaList() {
@@ -234,7 +257,7 @@ void Interpreter::issueError(std::string err, int lineno) {
     if (lineno == -1) {
         std::cerr << "Error: " << err << std::endl;
     } else {
-        std::cerr << "Error at " << lineno << ": " << err << std::endl;
+        std::cerr << "Error at line " << lineno << ": " << err << std::endl;
     }
     exit(1);
 }

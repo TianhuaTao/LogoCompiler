@@ -21,7 +21,7 @@ inline int stringToInt(std::string s){
 }
 
 inline void issueRuntimeError(std::string err) {
-    std::cout << err << std::endl;
+    std::cout << "Runtime error: " << err << std::endl;
     exit(1);
 }
 

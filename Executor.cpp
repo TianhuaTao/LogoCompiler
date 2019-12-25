@@ -289,6 +289,24 @@ void Executor::call(std::string name, std::vector<VariableWrapper> paraList) {
     op = new CallOp(this, name, paraList);
     current_ops->push_back(op);
 }
+// void Executor::setPenWidth(int w) {
+//     if (w > 0)
+//         penWidth = w;
+//     else {
+//         issueError("Pen width should be larger than 1");
+//     }
+// }
+
+void Executor::setPenWidth(VariableWrapper w) {
+    Op *op;
+    op = new SetPenWidthOp(this,w);
+    current_ops->push_back(op);
+}
+void Executor::fill(){
+    Op *op;
+    op = new FillOp(this);
+    current_ops->push_back(op);
+}
 
 StackFrame::~StackFrame()
 {

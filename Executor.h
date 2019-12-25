@@ -13,16 +13,18 @@ class Function;
 const double PI = 3.14159265359;
 class Executor
 {
+    friend class Interpreter;
     friend class MoveOp;
     friend class TurnOp;
     friend class AddOp;
     friend class ColorOp;
-    friend class AddOp;
     friend class EndLoopOp;
     friend class StartLoopOp;
     friend class cloakOp;
     friend class DefOp;
     friend class CallOp;
+    friend class FillOp;
+    friend class SetPenWidthOp;
 
 private:
     static Executor *globalExe;
@@ -42,6 +44,7 @@ private:
     Pixel &getBufferPixel(int x, int y);
     int width;
     int height;
+    int penWidth=1;
     Pixel _noPixel; // a special pixel, all invalid pixels point to this
 public:
     Executor();
@@ -52,6 +55,7 @@ public:
     void initNewBuffer(int width, int height);
     void setBackground(int R, int G, int B);
     void setPenPosition(int x, int y);
+    // void setPenWidth(int w);
     void def(std::string name, int value);
     // void add(Variable &v, int value);
     void add(VariableWrapper vw, VariableWrapper value);
@@ -64,7 +68,8 @@ public:
     void turn(VariableWrapper vw);
     // void setPenColor(int r, int g, int b);
     void setPenColor(VariableWrapper r, VariableWrapper g, VariableWrapper b);
-
+    void setPenWidth(VariableWrapper w);
+    void fill();
     void loop(int value);
     void endLoop();
     void startFuncDef(std::string name, std::vector<VariableWrapper> list);

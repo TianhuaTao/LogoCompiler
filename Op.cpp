@@ -34,6 +34,10 @@ StartLoopOp::~StartLoopOp() {
 }
 
 void StartLoopOp::exec() {
+    if(!end){
+        issueRuntimeError("END LOOP not found");
+    }
+
     // will execute only once, just check if loops = 0
     loops = prop_loops;
     std::cout << "LOOP " << loops << std::endl;
@@ -116,9 +120,14 @@ void MoveOp::exec() {
 
         // do some real drawing
         for (int i = 0; i < l; i++) {
-            int physical_pen_x = static_cast<int>(executor->logical_pen_x+0.5);
+            int width = executor->penWidth;
+            int physical_pen_x = static_cast<int>(executor->logical_pen_x + 0.5);
             int physical_pen_y = static_cast<int>(executor->logical_pen_y + 0.5);
-            executor->drawPixel(physical_pen_x, physical_pen_y);
+            for (int x = physical_pen_x-width/2; x <physical_pen_x+ width/2+1; x++) {
+                for (int y = physical_pen_y - width / 2; y < physical_pen_y + width / 2 + 1; y++) {
+                    executor->drawPixel(x, y);
+                }
+            }
             executor->logical_pen_x += 1 * cos(executor->degree * PI / 180.0);
             executor->logical_pen_y += 1 * sin(executor->degree * PI / 180.0);
         }
@@ -256,4 +265,32 @@ void DefOp::exec() {
     } else {
         issueRuntimeError("Variable " + name + " is already defined");
     }
+}
+
+SetPenWidthOp::SetPenWidthOp(Executor *executor, VariableWrapper vw) : Op(executor), varWrapper(vw) {
+}
+
+SetPenWidthOp::~SetPenWidthOp() {
+
+}
+
+void SetPenWidthOp::exec() {
+    int w = varWrapper.getValue();
+    std::cout<< "PENWIDTH " <<w <<
+        std::endl;
+    if (w > 0)
+        executor->penWidth =w;
+    else {
+        issueError("Pen width should be larger than 1");
+    }
+}
+
+FillOp::FillOp(Executor *executor) : Op(executor) {
+}
+
+FillOp::~FillOp() {
+}
+
+void FillOp::exec() {
+    std::cout << "FILL" << std::endl;
 }

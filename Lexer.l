@@ -32,6 +32,8 @@ WHITESPACE			 ([ \t]+)
 "@SIZE"				    {   keyword(ATSIZE);			}
 "END LOOP"			    {   keyword(ENDLOOP);			}
 "END FUNC"			    {   keyword(ENDFUNC);			}
+"PENWIDTH"              {   keyword(PENWIDTH);			}
+"FILL"                  {   keyword(FILL);			}   
 "("                     {  keyword(LPAR);			}
 ")"                     {  keyword(RPAR);			}
 ","                     {  keyword(COMMA);			}

@@ -64,7 +64,7 @@ class StartLoopOp : public Op {
 private:
     const int prop_loops;
     int loops;
-    Op *end;
+    Op *end =  nullptr;
 
 public:
     StartLoopOp(Executor *executor, int loops);
@@ -132,5 +132,27 @@ public:
     virtual void exec();
     virtual bool isDefOp() { return true; }
 };
+
+class SetPenWidthOp : public Op {
+private:
+    VariableWrapper varWrapper;
+public:
+    SetPenWidthOp(Executor *executor,  VariableWrapper vw);
+    ~SetPenWidthOp();
+    virtual void exec();
+};
+
+class FillOp : public Op {
+private:
+    
+public:
+    FillOp(Executor *executor);
+    ~FillOp();
+    virtual void exec();
+};
+
+
+
+
 
 #endif // OP_H
