@@ -21,6 +21,8 @@ extern std::string symbolTypeName[] = {
     "ATSIZE",
     "ENDLOOP",
     "ENDFUNC",
+    "PENWIDTH",
+    "FILL",
     "LPAR",
     "RPAR",
     "IDENTIFIER",
