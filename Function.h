@@ -10,7 +10,7 @@ class Function {
 private:
     std::string _name;
     int _argc;
-    std::vector<Op *> _ops;
+    std::vector<Op *> _ops; // A function is made up of a group of Ops
     std::vector<VariableWrapper> paraList;
 public:
     Function(std::string name, std::vector<VariableWrapper> paraList);

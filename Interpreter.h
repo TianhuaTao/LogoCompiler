@@ -7,6 +7,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+extern bool verbose;
 class Interpreter {
 private:
     // std::queue<std::string> lexQueue;

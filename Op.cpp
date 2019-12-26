@@ -13,34 +13,48 @@ Op::Op() {
 Op::~Op() {
 }
 
-Op::Op(Executor *executor) : executor(executor) {
+Op::Op(Executor *executor, int lineno) : executor(executor), lineno(lineno) {
+    if (lineno == -1) {
+        std::cout << "Debug Info: Op lineno is -1" << std::endl;
+    }
 }
 
-cloakOp::cloakOp(Executor *executor) : Op(executor) {
+CloakOp::CloakOp(Executor *executor, int lineno) : Op(executor, lineno) {
+    if (lineno == -1) {
+        std::cout << "Debug Info: lineno is -1" << std::endl;
+        std::cout << OpName() << std::endl;
+    }
 }
 
-cloakOp::~cloakOp() {
+CloakOp::~CloakOp() {
 }
 
-void cloakOp::exec() {
-    std::cout << "CLOAK " << std::endl;
+void CloakOp::exec() {
+    if (verbose)
+        std::cout << "CLOAK " << std::endl;
     executor->clocked = true;
 }
 
-StartLoopOp::StartLoopOp(Executor *executor, int loops) : prop_loops(loops), Op(executor) {
+StartLoopOp::StartLoopOp(Executor *executor, int loops, int lineno) : prop_loops(loops), Op(executor, lineno) {
+    if (lineno == -1) {
+        std::cout << "Debug Info: lineno is -1" << std::endl;
+        std::cout << OpName() << std::endl;
+    }
 }
 
 StartLoopOp::~StartLoopOp() {
 }
 
 void StartLoopOp::exec() {
-    if(!end){
-        issueRuntimeError("END LOOP not found");
+    if (!end) {
+        issueRuntimeError("END LOOP not found", getLineNo());
     }
 
     // will execute only once, just check if loops = 0
     loops = prop_loops;
-    std::cout << "LOOP " << loops << std::endl;
+    if (verbose) {
+        std::cout << "LOOP " << loops << std::endl;
+    }
 
     if (loops < 0) {
         issueError("loop value should be non-negative");
@@ -50,7 +64,6 @@ void StartLoopOp::exec() {
         while (!isEndLoop && executor->pc < executor->current_ops->size()) {
             executor->pc++;
             // std::cout << "\tPC = " << executor->pc << std::endl;
-
             std::vector<Op *> *ops = executor->current_ops;
             Op *op = (*ops)[executor->pc];
             isEndLoop = (op == end);
@@ -60,14 +73,19 @@ void StartLoopOp::exec() {
     }
 }
 
-EndLoopOp::EndLoopOp(Executor *executor, Op *start) : Op(executor), start(start) {
+EndLoopOp::EndLoopOp(Executor *executor, Op *start, int lineno) : Op(executor, lineno), start(start) {
+    if (lineno == -1) {
+        std::cout << "Debug Info: lineno is -1" << std::endl;
+        std::cout << OpName() << std::endl;
+    }
 }
 
 EndLoopOp::~EndLoopOp() {
 }
 
 void EndLoopOp::exec() {
-    std::cout << "ONE loop finished" <<std::endl;
+    if (verbose)
+        std::cout << "ONE loop finished" << std::endl;
 
     size_t maybe_pc = executor->pc;
     bool isStartLoop = false;
@@ -91,24 +109,16 @@ void EndLoopOp::exec() {
     }
 }
 
-// MoveOp::MoveOp(Executor *executor, int step) : Op(executor), step(step) {
-// }
-
 MoveOp::~MoveOp() {
 }
 
 void MoveOp::exec() {
-    // std::cout << "debug: in MoveOp::exec()" << std::endl;
-
     int l;
-    // if (var) {
-    //     l = var->getValue();
-    // } else {
-    //     l = step;
-    // }
     l = _varWrapper.getValue();
-    std::cout << "MOVE " << l << " steps" << std::endl;
-    std::cout << "\tlogical_location:[" << executor->logical_pen_x << "," << executor->logical_pen_y << "]" << std::endl;
+    if (verbose) {
+        std::cout << "MOVE " << l << " steps" << std::endl;
+        std::cout << "\tlogical_location:[" << executor->logical_pen_x << "," << executor->logical_pen_y << "]" << std::endl;
+    }
 
     if (executor->clocked) {
         double dx, dy;
@@ -123,7 +133,7 @@ void MoveOp::exec() {
             int width = executor->penWidth;
             int physical_pen_x = static_cast<int>(executor->logical_pen_x + 0.5);
             int physical_pen_y = static_cast<int>(executor->logical_pen_y + 0.5);
-            for (int x = physical_pen_x-width/2; x <physical_pen_x+ width/2+1; x++) {
+            for (int x = physical_pen_x - width / 2; x < physical_pen_x + width / 2 + 1; x++) {
                 for (int y = physical_pen_y - width / 2; y < physical_pen_y + width / 2 + 1; y++) {
                     executor->drawPixel(x, y);
                 }
@@ -134,56 +144,61 @@ void MoveOp::exec() {
     }
 }
 
-// MoveOp::MoveOp(Executor *executor, Variable *var) {
-// }
-
-// TurnOp::TurnOp(Executor *executor, int degree) : Op(executor), degree(degree) {
-// }
-
 TurnOp::~TurnOp() {
 }
 
 void TurnOp::exec() {
     int d = varWrapper.getValue();
-    // if (var) {
-    //     int d = var->getValue();
-    //     std::cout << "TURN " << d << " degree" << std::endl;
-    //     executor->degree -= d;
-    // } else {
-    //     std::cout << "TURN " << degree << " degree" << std::endl;
-    //     executor->degree -= degree;
-    // }
-    std::cout << "TURN " << d << " degree" << std::endl;
-    executor->degree -= d;
-    std::cout << "\tdegree state: " << executor->degree << std::endl;
 
+    if (verbose) {
+        std::cout << "TURN " << d << " degree" << std::endl;
+    }
+    executor->degree -= d;
+    if (verbose) {
+        std::cout << "\tdegree state: " << executor->degree << std::endl;
+    }
     executor->degree = (executor->degree + 360) % 360;
 }
-
-// TurnOp::TurnOp(Executor *executor, Variable *var) {
-// }
-
-// ColorOp::ColorOp(Executor *executor, Pixel p) : Op(executor), pixel(p) {
-// }
 
 ColorOp::~ColorOp() {
 }
 void ColorOp::exec() {
-    std::cout << "COLOR"
-              << "[" << r.getValue() << "," << g.getValue() << "," << b.getValue() << "]" << std::endl;
-    Pixel pixel(r.getValue(), g.getValue(), b.getValue(), 1);
+    int rr = r.getValue();
+    int gg = g.getValue();
+    int bb = b.getValue();
+    if (verbose) {
+        std::cout << "COLOR"
+                  << "[" << rr << "," << gg << "," << bb << "]" << std::endl;
+    }
+    if (rr > 255 || gg > 255 || bb > 255 || rr < 0 || gg < 0 || bb < 0) {
+        issueRuntimeWarning("Color value out of range, value larger than 255 will be set to 255, value smaller than 0 will be set 0");
+    }
+    rr = min(rr, 255);
+    rr = max(rr, 0);
+    gg = min(gg, 255);
+    gg = max(gg, 0);
+    bb = min(bb, 255);
+    bb = max(bb, 0);
+
+    Pixel pixel(rr, gg, bb, 1);
     executor->penColor = pixel;
     executor->clocked = false;
     // std::cout << "ColorOp::exec() done" << std::endl;
 }
 
-AddOp::AddOp(Executor *executor, VariableWrapper vw, VariableWrapper value) : Op(executor), var(vw), value(value) {
+AddOp::AddOp(Executor *executor, VariableWrapper vw, VariableWrapper value, int lineno) : Op(executor, lineno), var(vw), value(value) {
+    if (lineno == -1) {
+        std::cout << "Debug Info: lineno is -1" << std::endl;
+        std::cout << OpName() << std::endl;
+    }
 }
 
 AddOp::~AddOp() {}
 
 void AddOp::exec() {
-    std::cout << "ADD " << var.getVariableName() << " " << value.getValue() << std::endl;
+    if (verbose) {
+        std::cout << "ADD " << var.getVariableName() << " " << value.getValue() << std::endl;
+    }
     Variable &v = Executor::getVariableByNameStatic(var.getVariableName());
     if (v == Variable::noVar()) {
     } else {
@@ -191,22 +206,20 @@ void AddOp::exec() {
     }
 }
 
-// CallOp::CallOp(Executor *executor, std::string name, std::vector<VariableWrapper> paraList) : Op(executor)
-// {
-// }
-
 CallOp::~CallOp() {}
 void CallOp::exec() {
-    std::cout << "CALL " << name << " "
-              << "args=[";
-    for (auto it = argList.begin(); it != argList.end(); it++) {
-        std::cout << it->getValue();
-        if (it + 1 != argList.end()) {
-            std::cout << ", ";
-        }
-    }
-    std::cout << "]" << std::endl;
+    if (verbose) {
+        std::cout << "CALL " << name << " "
+                  << "args=[";
 
+        for (auto it = argList.begin(); it != argList.end(); it++) {
+            std::cout << it->getValue();
+            if (it + 1 != argList.end()) {
+                std::cout << ", ";
+            }
+        }
+        std::cout << "]" << std::endl;
+    }
     // find ops from allOps, push stack
     Function *func = nullptr;
     for (auto it = executor->allFunctions.begin(); it != executor->allFunctions.end(); it++) {
@@ -217,11 +230,10 @@ void CallOp::exec() {
     if (func) {
         //create stack frame
         executor->callStack.push_back(StackFrame(func, executor->pc, std::vector<Variable>()));
-
         //push args
         std::vector<VariableWrapper> &paraList = func->getParaList();
         if (paraList.size() != argList.size()) {
-            issueError("arguments do not match");
+            issueRuntimeError("arguments do not match", getLineNo());
         }
 
         for (size_t i = 0; i < argList.size(); i++) {
@@ -233,21 +245,22 @@ void CallOp::exec() {
             vars.push_back(Variable(paraName, argValue));
         }
         executor->current_function = func;
-        executor->current_ops=func->getOps();
-        executor->pc = -1;   // pc will add 1 after CallOp is executed
+        executor->current_ops = func->getOps();
+        executor->pc = -1; // pc will add 1 after CallOp is executed
     } else {
         // func not defined
-        issueRuntimeError("function "+ name+" not found");
+        issueRuntimeError("function " + name + " not found");
     }
 }
-DefOp::DefOp(Executor *executor, std::string name, VariableWrapper vw) :Op(executor),name(name), varWrapper(vw) {
+DefOp::DefOp(Executor *executor, std::string name, VariableWrapper vw, int lineno) : Op(executor, lineno), name(name), varWrapper(vw) {
 }
 
 DefOp::~DefOp() {
 }
 
 void DefOp::exec() {
-    std::cout << "DEF " << name << " " << varWrapper.getValue() << std::endl;
+    if (verbose)
+        std::cout << "DEF " << name << " " << varWrapper.getValue() << std::endl;
     bool defined = false;
     auto index = executor->callStack.size() - 1; // the index of the last frame
     StackFrame &localStackFrame = executor->callStack[index];
@@ -267,25 +280,24 @@ void DefOp::exec() {
     }
 }
 
-SetPenWidthOp::SetPenWidthOp(Executor *executor, VariableWrapper vw) : Op(executor), varWrapper(vw) {
+SetPenWidthOp::SetPenWidthOp(Executor *executor, VariableWrapper vw, int lineno) : Op(executor, lineno), varWrapper(vw) {
 }
 
 SetPenWidthOp::~SetPenWidthOp() {
-
 }
 
 void SetPenWidthOp::exec() {
     int w = varWrapper.getValue();
-    std::cout<< "PENWIDTH " <<w <<
-        std::endl;
+    if(verbose)
+        std::cout << "PENWIDTH " << w << std::endl;
     if (w > 0)
-        executor->penWidth =w;
+        executor->penWidth = w;
     else {
         issueError("Pen width should be larger than 1");
     }
 }
 
-FillOp::FillOp(Executor *executor) : Op(executor) {
+FillOp::FillOp(Executor *executor, int lineno) : Op(executor, lineno) {
 }
 
 FillOp::~FillOp() {

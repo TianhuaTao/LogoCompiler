@@ -1,0 +1,51 @@
+@SIZE 400 400
+@BACKGROUND 255 255 255
+@POSITION 0 0
+
+FUNC moveRight(length)
+	CLOAK
+	TURN 90
+	MOVE length
+	TURN -90
+END FUNC
+PENWIDTH 5
+DEF x 115
+CLOAK
+MOVE 200
+TURN 90 MOVE 30
+TURN -90
+COLOR 103 148 190
+CALL draw_circle_on_the_right()
+CLOAK
+TURN 90 MOVE x
+TURN -90
+COLOR 27 28 30
+CALL draw_circle_on_the_right()
+CALL moveRight(x)
+
+
+COLOR 172 16 40
+CALL draw_circle_on_the_right()
+CLOAK
+TURN 540
+MOVE 55
+TURN 90
+MOVE 172
+TURN 90
+COLOR 113 193 124
+CALL draw_circle_on_the_right()
+CALL moveRight(x)
+COLOR 240 201 84
+
+CALL draw_circle_on_the_right()
+
+
+
+
+
+FUNC draw_circle_on_the_right()
+	LOOP	360
+		MOVE 1
+		TURN 1
+	END LOOP
+END FUNC

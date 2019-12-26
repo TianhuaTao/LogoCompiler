@@ -5,7 +5,7 @@ CPPFLAGS=-g --std=c++11
 LDFLAGS=-g --std=c++11 
 LDLIBS=
 
-SRCS=main.cpp FileWriter.cpp Executor.cpp Op.cpp lex.yy.cpp Interpreter.cpp symbols.cpp OpsQueue.cpp Variable.cpp VariableWrapper.cpp Function.cpp
+SRCS=main.cpp FileWriter.cpp Executor.cpp Op.cpp lex.yy.cpp Interpreter.cpp symbols.cpp Variable.cpp VariableWrapper.cpp Function.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: LogoCompiler
@@ -18,6 +18,9 @@ LogoCompiler: $(OBJS)
 
 # lex.yy.c: Lexer.l
 # 	lex Lexer.l
+
+# g++ -g -std=c++11 -o LogoCompiler main.cpp FileWriter.cpp Executor.cpp Op.cpp lex.yy.cpp Interpreter.cpp symbols.cpp OpsQueue.cpp Variable.cpp VariableWrapper.cpp Function.cpp
+
 
 depend: .depend
 

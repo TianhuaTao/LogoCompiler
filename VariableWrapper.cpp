@@ -1,7 +1,7 @@
 
 #include "VariableWrapper.h"
-#include "Variable.h"
 #include "Executor.h"
+#include "Variable.h"
 #include "utility.h"
 VariableWrapper::VariableWrapper(int value) : _value(value) {
 }
@@ -22,7 +22,7 @@ int VariableWrapper::getValue() const {
             auto &v = Executor::getVariableByNameStatic(varName);
             if (v == Variable::noVar()) {
                 issueRuntimeError("cannot find variable " + varName);
-                return v.getValue();    // value is not defined
+                return v.getValue(); // value is not defined
             } else
                 return v.getValue();
         }
@@ -32,7 +32,7 @@ int VariableWrapper::getValue() const {
     }
 }
 
-std::string VariableWrapper::getVariableName() const{
+std::string VariableWrapper::getVariableName() const {
     if (isVar) {
         if (_variable) {
             return _variable->getName();

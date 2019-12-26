@@ -4,15 +4,12 @@
 
 class Variable;
 
-
-class VariableWrapper
-{
+class VariableWrapper {
 private:
-    Variable *_variable=nullptr;
+    Variable *_variable = nullptr;
     int _value = 0;
     std::string varName;
     bool isVar = false;
-
 
 public:
     VariableWrapper(Variable *var);
@@ -20,7 +17,7 @@ public:
     VariableWrapper(std::string varName);
     ~VariableWrapper();
     bool isLiteral() const { return _variable == 0; }
-    bool isVariable() const{
+    bool isVariable() const {
         return _variable != 0;
     }
     std::string getVariableName() const;

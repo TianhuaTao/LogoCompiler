@@ -6,7 +6,9 @@ Symbol::Symbol(SymbolType st) : type(st) {
     lineno = yylineno;
 }
 
-extern std::string symbolTypeName[] = {
+// The order is important
+// should be the same as enum SymbolType
+std::string symbolTypeName[] = {
     "MOVE",
     "TURN",
     "LOOP",
@@ -53,8 +55,6 @@ const std::string &Symbol::getName() const {
 
 int keyword(SymbolType st) {
     // std::cout<< "keyword: code = "<<st<< std::endl;
-    // extern int yylineno;
-    
     lexQueue.push(Symbol(st));
     return st;
 }
@@ -74,14 +74,6 @@ void issueError(const char *text) {
     exit(1);
 }
 
-extern "C"
-{
-    int yywrap(){return 1;}
+extern "C" {
+int yywrap() { return 1; }
 }
-// int main(int argc, char const *argv[])
-// {
-//     yylex();
-//     std::cout<< "queue size: "<<lexQueue.size()<< std::endl;
-//     return 0;
-// }
-

@@ -9,7 +9,7 @@ FileWriter::~FileWriter() {
 size_t FileWriter::WriteBMP(std::string filename, const unsigned char *data, int width, int height) {
     FILE *fp;
     fp = fopen(filename.c_str(), "wb");
-    if(!fp){
+    if (!fp) {
         return 0;
     }
     unsigned char *img = nullptr;
@@ -49,7 +49,6 @@ size_t FileWriter::WriteBMP(std::string filename, const unsigned char *data, int
     bmpinfoheader[10] = (unsigned char)(height >> 16);
     bmpinfoheader[11] = (unsigned char)(height >> 24);
 
-    
     fwrite(bmpfileheader, 1, 14, fp);
     fwrite(bmpinfoheader, 1, 40, fp);
     for (int i = 0; i < height; i++) {

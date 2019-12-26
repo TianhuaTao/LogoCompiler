@@ -4,10 +4,8 @@
 #include <queue>
 #include <string>
 
-extern "C"
-{
-    int yylex(void);
-    
+extern "C" {
+int yylex(void);
 }
 const int SYMBOL_TYPE_START_NO = 30000;
 enum SymbolType {
@@ -37,7 +35,7 @@ enum SymbolType {
 
 extern std::string symbolTypeName[];
 
-inline std::string getSymbolTypeName(int type){
+inline std::string getSymbolTypeName(int type) {
     return symbolTypeName[type - SYMBOL_TYPE_START_NO];
 }
 
@@ -50,34 +48,29 @@ private:
 
 public:
     const std::string &getName() const;
-    const int &getLineno() const{
+    const int &getLineno() const {
         return lineno;
     }
 
 public:
     Symbol(SymbolType st);
-    Symbol(SymbolType st, int value,std::string name );
+    Symbol(SymbolType st, int value, std::string name);
 
     static Symbol identifier(std::string name);
     static Symbol intConst(std::string intStr);
-    int getValue()const{return value;}
-    int getType()const{return type;}
+    int getValue() const { return value; }
+    int getType() const { return type; }
     ~Symbol();
 };
 
 extern std::queue<Symbol> lexQueue;
 
-
 int keyword(SymbolType st);
 
+int intConst(const char *s);
 
-int intConst(const char* s);
+int identifier(const char *s);
 
-
-int identifier(const char* s);
-
-
-void issueError(const char* text);
-
+void issueError(const char *text);
 
 #endif // SYMBOLS_H

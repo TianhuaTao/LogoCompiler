@@ -1,9 +1,9 @@
 #include "Interpreter.h"
+#include "Function.h"
 #include "Variable.h"
 #include "symbols.h"
 #include "utility.h"
 #include <sstream>
-#include "Function.h"
 Interpreter::Interpreter() {
 }
 
@@ -18,7 +18,7 @@ int assertSymbolType(Symbol &s, SymbolType type) {
     exit(1);
     return -1;
 }
-void Interpreter::compile(const char *filename, const char*outName) {
+void Interpreter::compile(const char *filename, const char *outName) {
     FILE *fp = fopen(filename, "r");
     if (fp == nullptr) {
         std::cout << "Cannot open the file" << std::endl;
@@ -30,7 +30,7 @@ void Interpreter::compile(const char *filename, const char*outName) {
     fclose(fp);
 
     // std::cout << "symbol queue size: " << lexQueue.size() << std::endl;
-    if(lexQueue.empty()){
+    if (lexQueue.empty()) {
         issueError("The file is empty");
     }
     // header
@@ -63,13 +63,23 @@ void Interpreter::compile(const char *filename, const char*outName) {
         Symbol s = nextSymbol();
         processSymbol(s);
     }
-    // std::cout << executor.current_function->getName()<<std::endl;
     if (executor.current_function->getName() != "0global") {
-
         issueError("End of file in function definition, did you miss \"END FUNC\" for " + executor.current_function->getName() + "()?");
     }
     executor.run();
-    std::string outFileName = "output.bmp";
+    std::string outFileName;
+    if (outName) {
+        outFileName = outName;
+    } else {
+        std::string inputName(filename);
+        // remove the last ".bmp", if there is one
+        if (ends_with(inputName, ".logo") || ends_with(inputName, ".LOGO")) {
+            outFileName = std::string(inputName.begin(), inputName.end() - 5) + ".bmp";
+        } else {
+            outFileName = inputName + ".bmp";
+        }
+    }
+
     executor.writeFile(outFileName);
 }
 
@@ -110,37 +120,27 @@ void Interpreter::processSymbol(Symbol &symbol) {
     if (symbol.getType() == TURN) {
         auto sym = nextSymbol();
         if (sym.getType() == INTCONST) {
-            executor.turn(VariableWrapper(sym.getValue()));
+            executor.turn(VariableWrapper(sym.getValue()), symbol.getLineno());
         } else {
             assertSymbolType(sym, IDENTIFIER);
-            // Variable &v = Variable::getVariableByName(sym.getName());
-            // if (v == Variable::noVar())
-            // {
-            //     issueError("Variable not found: " + sym.getName());
-            // }
-            executor.turn(VariableWrapper(sym.getName()));
+            executor.turn(VariableWrapper(sym.getName()), symbol.getLineno());
         }
     } else if (symbol.getType() == MOVE) {
         auto sym = nextSymbol();
         if (sym.getType() == INTCONST) {
             // Todo: use VariableWrapper
-            executor.move(sym.getValue());
+            executor.move(sym.getValue(), symbol.getLineno());
         } else {
             assertSymbolType(sym, IDENTIFIER);
-            // Variable &v = Variable::getVariableByName(sym.getName());
-            // std::cout << "debug: " << v.getValue() << std::endl;
-
             // Todo: use VariableWrapper
-            executor.move(sym.getName());
+            executor.move(sym.getName(), symbol.getLineno());
         }
-    }
-
-    else if (symbol.getType() == ENDLOOP) {
-        executor.endLoop();
+    } else if (symbol.getType() == ENDLOOP) {
+        executor.endLoop(symbol.getLineno());
     } else if (symbol.getType() == ENDFUNC) {
-        executor.endFuncDef();
-    }else if(symbol.getType()== FILL){
-        executor.fill();
+        executor.endFuncDef(symbol.getLineno());
+    } else if (symbol.getType() == FILL) {
+        executor.fill(symbol.getLineno());
     } else if (symbol.getType() == PENWIDTH) {
         auto widthValue = nextSymbol();
         VariableWrapper value(0);
@@ -150,13 +150,10 @@ void Interpreter::processSymbol(Symbol &symbol) {
             assertSymbolType(widthValue, IDENTIFIER);
             value = VariableWrapper(widthValue.getName());
         }
-        executor.setPenWidth(value);
-    }
-
-    else if (symbol.getType() == ADD) {
+        executor.setPenWidth(value, symbol.getLineno());
+    } else if (symbol.getType() == ADD) {
         auto sym = nextSymbol();
         assertSymbolType(sym, IDENTIFIER);
-        // int value = nextInt();
         auto addValue = nextSymbol();
         VariableWrapper value(0);
         if (addValue.getType() == INTCONST) {
@@ -165,45 +162,40 @@ void Interpreter::processSymbol(Symbol &symbol) {
             assertSymbolType(addValue, IDENTIFIER);
             value = VariableWrapper(addValue.getName());
         }
-        executor.add(VariableWrapper(sym.getName()), value);
-        // Variable&v =Variable::getVariableByName(sym.getName());
-        // if(v == Variable::noVar()){
-        // issueError("cannot find variable: "+ sym.getName());
+        executor.add(VariableWrapper(sym.getName()), value, symbol.getLineno());
 
     } else if (symbol.getType() == COLOR) {
-        // std::cout << "symbol:COLOR" << std::endl;
         VariableWrapper r(0);
         VariableWrapper g(0);
         VariableWrapper b(0);
         r = getNextVariableWrapper();
         g = getNextVariableWrapper();
         b = getNextVariableWrapper();
-        executor.setPenColor(r, g, b);
+        executor.setPenColor(r, g, b, symbol.getLineno());
     } else if (symbol.getType() == CLOAK) {
-        executor.cloak();
+        executor.cloak(symbol.getLineno());
     } else if (symbol.getType() == LOOP) {
         int loop = nextInt();
-        executor.loop(loop);
+        executor.loop(loop, symbol.getLineno());
     } else if (symbol.getType() == FUNC) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getIdentifierList();
-        executor.startFuncDef(funcSymbol.getName(), list);
+        executor.startFuncDef(funcSymbol.getName(), list, symbol.getLineno());
     }
 
     else if (symbol.getType() == CALL) {
         auto funcSymbol = nextSymbol();
         assertSymbolType(funcSymbol, IDENTIFIER);
         auto list = getParaList();
-        executor.call(funcSymbol.getName(), list);
+        executor.call(funcSymbol.getName(), list, symbol.getLineno());
     } else if (symbol.getType() == DEF) {
         auto varName = nextSymbol();
         assertSymbolType(varName, IDENTIFIER);
         int init_value = nextInt();
-        executor.def(varName.getName(), init_value);
-    }else
-    {
-        std::string msg = " WTF R U TALKING ABOUT: " + symbol.getName() + " ???";
+        executor.def(varName.getName(), init_value, symbol.getLineno());
+    } else {
+        std::string msg = "Unexpected symbol: " + symbol.getName();
         issueError(msg, symbol.getLineno());
     }
 }
@@ -218,10 +210,6 @@ std::vector<VariableWrapper> Interpreter::getParaList() {
         } else if (symbol.getType() == INTCONST) {
             result.push_back(VariableWrapper(symbol.getValue()));
         }
-
-        // if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
-        //     result.push_back(symbol);
-        // }
         symbol = nextSymbol();
         if (symbol.getType() == COMMA) {
             symbol = nextSymbol();
@@ -238,13 +226,9 @@ std::vector<VariableWrapper> Interpreter::getIdentifierList() {
         if (symbol.getType() == IDENTIFIER) {
             result.push_back(VariableWrapper(symbol.getName()));
         } else if (symbol.getType() == INTCONST) {
-            issueError("unexpected int const here");
-            // result.push_back(VariableWrapper(symbol.getValue()));
+            issueError("unexpected int const here", symbol.getLineno());
         }
 
-        // if(symbol.getType()== IDENTIFIER || symbol.getType()== INTCONST){
-        //     result.push_back(symbol);
-        // }
         symbol = nextSymbol();
         if (symbol.getType() == COMMA) {
             symbol = nextSymbol();
@@ -265,8 +249,7 @@ void Interpreter::issueError(std::string err, int lineno) {
 void Interpreter::issueWarning(std::string err, int lineno) {
     if (lineno == -1) {
         std::cerr << "Warning: " << err << std::endl;
-    }
-    else {
+    } else {
         std::cout << "Warning at " << lineno << ": " << err << std::endl;
     }
 }

@@ -1,0 +1,15 @@
+@SIZE 1000 1000
+@BACKGROUND 30 30 30
+@POSITION 500	500  
+COLOR 255 255 255
+DEF step 1
+hackhacks
+step
+step
+step
+step
+LOOP 1000
+	MOVE step
+	TURN 9
+	ADD step 1
+END LOOP

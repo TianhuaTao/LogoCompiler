@@ -16,7 +16,7 @@ private:
     const int id;
     static int nextID;
     bool isConst = false;
-    // static std::vector<Variable *> variableSet;
+
 
 public:
     Variable(std::string name, int initValue);

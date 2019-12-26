@@ -5,4 +5,3 @@ Function::Function(std::string name, std::vector<VariableWrapper> paraList) : _n
 
 Function::~Function() {
 }
-
