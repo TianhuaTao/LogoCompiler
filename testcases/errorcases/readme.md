@@ -4,7 +4,7 @@
 一些测例会提示warning，但可以继续生成bmp文件。
 
 testcase_1.logo:
-    多余字符 "\"
+    多余字符 "\\"
 
 testcase_2.logo:
     空文件
