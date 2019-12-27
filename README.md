@@ -1,2 +1,0 @@
-# LogoCompiler
-THU homework project
