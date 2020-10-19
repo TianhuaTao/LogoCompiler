@@ -22,6 +22,6 @@ END LOOP
 
 输出：
 
-![demo](\demo.png)
+![demo](https://github.com/TianhuaTao/LogoCompiler/blob/master/demo.png?raw=true)
 
 更多例子请看 `testcases` 中的内容。
